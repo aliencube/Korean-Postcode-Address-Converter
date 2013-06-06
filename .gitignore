@@ -110,3 +110,6 @@ UpgradeLog*.XML
 *.bak
 *.org
 *.orig
+
+[Dd]ownloads/
+[Ee]xtracts/
