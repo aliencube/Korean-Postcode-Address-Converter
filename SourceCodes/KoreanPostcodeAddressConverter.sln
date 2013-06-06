@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C12F61D5-0DEB-4330-A026-67FE1A448FE4}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConverter.Configuration", "KoreanPostcodeAddressConverter.Configuration\KoreanPostcodeAddressConverter.Configuration.csproj", "{DFA22695-BCB2-4EB2-9622-4E8AF93D7F62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConverter.Services", "KoreanPostcodeAddressConverter.Services\KoreanPostcodeAddressConverter.Services.csproj", "{0DC76C65-C23A-457C-AF85-6833E45FEECE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConverter.Tests", "KoreanPostcodeAddressConverter.Tests\KoreanPostcodeAddressConverter.Tests.csproj", "{E8C22E7E-E9E1-4F7D-BC9F-44F61E5B707B}"
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = KoreanPostcodeAddressConverter.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFA22695-BCB2-4EB2-9622-4E8AF93D7F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFA22695-BCB2-4EB2-9622-4E8AF93D7F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFA22695-BCB2-4EB2-9622-4E8AF93D7F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFA22695-BCB2-4EB2-9622-4E8AF93D7F62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DC76C65-C23A-457C-AF85-6833E45FEECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DC76C65-C23A-457C-AF85-6833E45FEECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DC76C65-C23A-457C-AF85-6833E45FEECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DC76C65-C23A-457C-AF85-6833E45FEECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8C22E7E-E9E1-4F7D-BC9F-44F61E5B707B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8C22E7E-E9E1-4F7D-BC9F-44F61E5B707B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8C22E7E-E9E1-4F7D-BC9F-44F61E5B707B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8C22E7E-E9E1-4F7D-BC9F-44F61E5B707B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

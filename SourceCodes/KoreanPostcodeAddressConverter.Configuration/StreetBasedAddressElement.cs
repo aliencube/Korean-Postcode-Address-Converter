@@ -1,0 +1,61 @@
+using System.Configuration;
+
+namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
+{
+    /// <summary>
+    /// This represents the Street based address element entity.
+    /// </summary>
+    public class StreetBasedAddressElement : ConfigurationElement
+    {
+        /// <summary>
+        /// Gets or sets the download URL.
+        /// </summary>
+        [ConfigurationProperty("downloadUrl", IsRequired = true)]
+        public DownloadUrlElement DownloadUrl
+        {
+            get { return (DownloadUrlElement) this["downloadUrl"]; }
+            set { this["downloadUrl"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the list of filenames.
+        /// </summary>
+        [ConfigurationProperty("filenames", IsRequired = true)]
+        [ConfigurationCollection(typeof(FilenamesElementCollection), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
+        public FilenamesElementCollection Filenames
+        {
+            get { return (FilenamesElementCollection) this["filenames"]; }
+            set { this["filenames"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the download directory.
+        /// </summary>
+        [ConfigurationProperty("downloadDirectory", IsRequired = true)]
+        public DirectoryElement DownloadDirectory
+        {
+            get { return (DirectoryElement)this["downloadDirectory"]; }
+            set { this["downloadDirectory"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the extract directory.
+        /// </summary>
+        [ConfigurationProperty("extractDirectory", IsRequired = true)]
+        public DirectoryElement ExtractDirectory
+        {
+            get { return (DirectoryElement)this["extractDirectory"]; }
+            set { this["extractDirectory"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the filename to archive.
+        /// </summary>
+        [ConfigurationProperty("archiveFilename", IsRequired = true)]
+        public FilenameElement ArchiveFilename
+        {
+            get { return (FilenameElement)this["archiveFilename"]; }
+            set { this["archiveFilename"] = value; }
+        }
+    }
+}
