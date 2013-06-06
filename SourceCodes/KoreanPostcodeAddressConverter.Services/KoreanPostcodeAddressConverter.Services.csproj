@@ -57,14 +57,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="lot-based-address.cs">
+    <Compile Include="LotBasedAddress.cs">
       <DependentUpon>lot-based-address.xsd</DependentUpon>
     </Compile>
     <Compile Include="Sanitisers\Int32Sanitiser.cs" />
     <Compile Include="Sanitisers\NullableBooleanSanitiser.cs" />
     <Compile Include="Sanitisers\NullableInt32Sanitiser.cs" />
     <Compile Include="Sanitisers\WhiteSpaceSanitiser.cs" />
-    <Compile Include="street-based-address.cs">
+    <Compile Include="StreetBasedAddress.cs">
       <DependentUpon>street-based-address.xsd</DependentUpon>
     </Compile>
     <Compile Include="StreetBasedAddressMetadata.cs" />
