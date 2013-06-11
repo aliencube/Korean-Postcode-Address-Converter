@@ -16,9 +16,12 @@ XML 형식으로 변환된 주소 데이터는 [http://aliencube.org/tools/korea
 
 **KPAC** is released under [MIT License](http://opensource.org/licenses/MIT).
 
+**KPAC**은 [MIT 라이센스](http://opensource.org/licenses/MIT)를 따릅니다.
+
+
 	The MIT License (MIT)
 	
-	Copyright (c) 2013 [aliencube.org](http://aliencube.org)
+	Copyright (c) 2013 aliencube.org
 	
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
