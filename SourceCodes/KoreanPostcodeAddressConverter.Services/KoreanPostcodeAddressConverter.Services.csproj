@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ConverterServiceType.cs" />
     <Compile Include="LotBasedAddress.cs">
       <DependentUpon>lot-based-address.xsd</DependentUpon>
     </Compile>
