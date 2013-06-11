@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Ionic.Zip;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Enums;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
@@ -131,6 +132,31 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                     zip.AddFile(filepath, String.Empty);
                 zip.Save();
             }
+        }
+        #endregion
+
+        #region Methods - Factory
+        /// <summary>
+        /// Creates the service based on the service type.
+        /// </summary>
+        /// <param name="serviceType">Service type.</param>
+        /// <param name="settings">Configuration settings.</param>
+        /// <returns>Returns the service based on the service type.</returns>
+        public static BaseAddressService Create(ConverterServiceType serviceType, Settings settings)
+        {
+            BaseAddressService service;
+            switch (serviceType)
+            {
+                case ConverterServiceType.Lot:
+                    service = new LotBasedAddressService(settings);
+                    break;
+                case ConverterServiceType.Street:
+                    service = new StreetBasedAddressService(settings);
+                    break;
+                default:
+                    throw new NotSupportedException("Service type is not defined");
+            }
+            return service;
         }
         #endregion
     }
