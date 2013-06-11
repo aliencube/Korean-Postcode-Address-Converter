@@ -131,6 +131,17 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shemas\2013\05\lot-based-address.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Shemas\2013\05\street-based-address.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Shemas\2013\06\hanja.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

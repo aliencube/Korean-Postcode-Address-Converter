@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://aliencube.org/schemas/2013/05/lot-based-address"
+    xmlns:mstns="http://aliencube.org/schemas/2013/05/lot-based-address"
+    targetNamespace="http://aliencube.org/schemas/2013/05/lot-based-address"
+    elementFormDefault="qualified"
+>
+    <xs:annotation>
+        <xs:documentation xml:lang="en">This describes Korean postcode-address system based on lot number system. Designed by Aliencube Consultings 2013-</xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="LotBasedAddresses" type="LotBasedAddresses" />
+
+    <xs:complexType name="LotBasedAddresses">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="LotBasedAddress" type="LotBasedAddress" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LotBasedAddress">
+        <xs:sequence>
+            <xs:element name="Postcode" type="xs:string" />
+            <xs:element name="SequenceNumber" type="xs:int" />
+            <xs:element name="Province" type="xs:string" />
+            <xs:element name="County" type="xs:string" nillable="true" />
+            <xs:element name="Suburb" type="xs:string" nillable="true" />
+            <xs:element name="Village" type="xs:string" nillable="true" />
+            <xs:element name="Island" type="xs:string" nillable="true" />
+            <xs:element name="San" type="xs:boolean" />
+            <xs:element name="LotNumberMajorFrom" type="xs:int" nillable="true" />
+            <xs:element name="LotNumberMinorFrom" type="xs:int" nillable="true" />
+            <xs:element name="LotNumberMajorTo" type="xs:int" nillable="true" />
+            <xs:element name="LotNumberMinorTo" type="xs:int" nillable="true" />
+            <xs:element name="BuildingName" type="xs:string" nillable="true" />
+            <xs:element name="BuildingNumberFrom" type="xs:int" nillable="true" />
+            <xs:element name="BuildingNumberTo" type="xs:int" nillable="true" />
+            <xs:element name="DateUpdated" type="xs:date" />
+            <xs:element name="Address" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

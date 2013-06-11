@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://aliencube.org/schemas/2013/06/hanja-for-everyday-use"
+    xmlns:mstns="http://aliencube.org/schemas/2013/06/hanja-for-everyday-use"
+    targetNamespace="http://aliencube.org/schemas/2013/06/hanja-for-everyday-use"
+    elementFormDefault="qualified"
+>
+    <xs:annotation>
+        <xs:documentation xml:lang="en">This describes Hanja (Chinese character for Korean) for everyday use. Designed by Aliencube Consultings 2013-</xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="HanjaCollection" type="HanjaCollection" />
+
+    <xs:complexType name="HanjaCollection">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Hanja" type="Hanja" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Hanja">
+        <xs:sequence>
+            <xs:element name="Character" type="xs:string" />
+            <xs:element name="Meaning" type="xs:string" />
+            <xs:element name="Pronunciation" type="xs:string" />
+            <xs:element name="PhoneticCode" type="xs:string" nillable="true" />
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
