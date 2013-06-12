@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns="http://aliencube.org/schemas/2013/05/street-based-address"
-    xmlns:mstns="http://aliencube.org/schemas/2013/05/street-based-address"
-    targetNamespace="http://aliencube.org/schemas/2013/05/street-based-address"
+    xmlns="http://aliencube.org/schemas/2013/06/street-based-address"
+    xmlns:mstns="http://aliencube.org/schemas/2013/06/street-based-address"
+    targetNamespace="http://aliencube.org/schemas/2013/06/street-based-address"
     elementFormDefault="qualified"
 >
     <xs:annotation>
@@ -42,6 +42,7 @@
             <xs:element name="Village" type="xs:string" nillable="true" />
             <xs:element name="San" type="xs:boolean" nillable="true" />
             <xs:element name="LotNumberMajor" type="xs:int" nillable="true" />
+            <xs:element name="SuburbSequenceNumber" type="xs:int" nillable="true" />
             <xs:element name="LotNumberMinor" type="xs:int" nillable="true" />
         </xs:sequence>
     </xs:complexType>

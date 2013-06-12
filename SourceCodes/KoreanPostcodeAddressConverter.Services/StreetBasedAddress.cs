@@ -20,8 +20,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://aliencube.org/schemas/2013/05/street-based-address")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="http://aliencube.org/schemas/2013/05/street-based-address", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://aliencube.org/schemas/2013/06/street-based-address")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="http://aliencube.org/schemas/2013/06/street-based-address", IsNullable=false)]
     public partial class StreetBasedAddresses {
         
         private StreetBasedAddress[] streetBasedAddressField;
@@ -43,7 +43,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://aliencube.org/schemas/2013/05/street-based-address")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://aliencube.org/schemas/2013/06/street-based-address")]
     public partial class StreetBasedAddress {
         
         private string postcodeField;
@@ -89,6 +89,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services {
         private System.Nullable<bool> sanField;
         
         private System.Nullable<int> lotNumberMajorField;
+        
+        private System.Nullable<int> suburbSequenceNumberField;
         
         private System.Nullable<int> lotNumberMinorField;
         
@@ -328,6 +330,17 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services {
             }
             set {
                 this.lotNumberMajorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<int> SuburbSequenceNumber {
+            get {
+                return this.suburbSequenceNumberField;
+            }
+            set {
+                this.suburbSequenceNumberField = value;
             }
         }
         
