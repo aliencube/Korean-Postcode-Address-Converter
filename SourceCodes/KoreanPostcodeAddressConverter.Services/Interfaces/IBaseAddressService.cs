@@ -61,6 +61,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         void GetXmlDocuments();
 
         /// <summary>
+        /// Loads objects to database.
+        /// </summary>
+        /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
+        void LoadDatabase(string sourceDirectory);
+
+        /// <summary>
         /// Archives XML documents generated.
         /// </summary>
         /// <param name="filename">Filename for archive.</param>

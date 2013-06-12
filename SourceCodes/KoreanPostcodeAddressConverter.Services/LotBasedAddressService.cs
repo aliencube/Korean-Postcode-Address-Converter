@@ -289,6 +289,29 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                 }
             }
         }
+
+        /// <summary>
+        /// Loads objects to database.
+        /// </summary>
+        /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
+        public override void LoadDatabase(string sourceDirectory)
+        {
+            using (var context = new AddressDataContext())
+            {
+                var serialiser = new XmlSerializer(typeof(LotBasedAddresses));
+                context.LotBasedAddresses.RemoveAll();
+                foreach (var filepath in Directory.GetFiles(sourceDirectory).Where(p => p.EndsWith(".xml")))
+                {
+                    using (var stream = new FileStream(filepath, FileMode.Open))
+                    using (var reader = new XmlTextReader(stream))
+                    {
+                        var collection = (LotBasedAddresses)serialiser.Deserialize(reader);
+                        context.AddRange(collection.LotBasedAddress);
+                    }
+                }
+                context.SaveChanges();
+            }
+        }
         #endregion
     }
 }

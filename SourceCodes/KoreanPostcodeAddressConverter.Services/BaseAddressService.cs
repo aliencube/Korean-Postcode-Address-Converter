@@ -83,6 +83,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// Gets XML documents from the extracted and converted files with appropriate encoding.
         /// </summary>
         public abstract void GetXmlDocuments();
+
+        /// <summary>
+        /// Loads objects to database.
+        /// </summary>
+        /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
+        public abstract void LoadDatabase(string sourceDirectory);
         #endregion
 
         #region Methods - Virtual
@@ -221,9 +227,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
             foreach (var filepath in Directory.GetFiles(this.ExtractDirectory))
             {
-                if (archive)
+                if (archive || !filepath.EndsWith(".xml"))
                     File.Delete(filepath);
-                else
+                else if (filepath.EndsWith(".xml"))
                 {
                     var archivename = filepath.Split(this.Settings
                                                          .ConversionSettings
