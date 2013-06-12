@@ -21,14 +21,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// </summary>
         /// <param name="settings">Configuration settings instance.</param>
         public StreetBasedAddressService(Settings settings)
+            : base(settings)
         {
-            this._settings = settings;
         }
         #endregion
 
         #region Properties
-        private readonly Settings _settings;
-
         private string _downloadUrl;
         /// <summary>
         /// Gets the download URL.
@@ -38,12 +36,30 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             get
             {
                 if (String.IsNullOrWhiteSpace(_downloadUrl))
-                    _downloadUrl = this._settings
-                                       .GetDownloadUrl(this._settings
+                    _downloadUrl = this.Settings
+                                       .GetDownloadUrl(this.Settings
                                                            .ConversionSettings
                                                            .StreetBasedAddress
                                                            .DownloadUrl);
                 return _downloadUrl;
+            }
+        }
+
+        private IList<string> _filenamesToDownloadOrExtract;
+        /// <summary>
+        /// Gets the list of filenames to download or extract.
+        /// </summary>
+        public override IList<string> FilenamesToDownloadOrExtract
+        {
+            get
+            {
+                if (_filenamesToDownloadOrExtract == null || !_filenamesToDownloadOrExtract.Any())
+                    _filenamesToDownloadOrExtract = this.Settings
+                                                        .GetFilenamesToDownloadOrExtract(this.Settings
+                                                                                             .ConversionSettings
+                                                                                             .StreetBasedAddress
+                                                                                             .Filenames);
+                return _filenamesToDownloadOrExtract;
             }
         }
 
@@ -56,8 +72,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             get
             {
                 if (String.IsNullOrWhiteSpace(_downloadDirectory))
-                    _downloadDirectory = this._settings
-                                             .GetAbsoluteDirectory(this._settings
+                    _downloadDirectory = this.Settings
+                                             .GetAbsoluteDirectory(this.Settings
                                                                        .ConversionSettings
                                                                        .StreetBasedAddress
                                                                        .DownloadDirectory);
@@ -77,8 +93,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             get
             {
                 if (String.IsNullOrWhiteSpace(_extractDirectory))
-                    _extractDirectory = this._settings
-                                            .GetAbsoluteDirectory(this._settings
+                    _extractDirectory = this.Settings
+                                            .GetAbsoluteDirectory(this.Settings
                                                                       .ConversionSettings
                                                                       .StreetBasedAddress
                                                                       .ExtractDirectory);
@@ -89,21 +105,42 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             }
         }
 
-        private IList<string> _filenamesToDownloadOrExtract;
+        private string _archiveDirectory;
         /// <summary>
-        /// Gets the list of filenames to download or extract.
+        /// Gets the directory to archive files.
         /// </summary>
-        public override IList<string> FilenamesToDownloadOrExtract
+        public override string ArchiveDirectory
         {
             get
             {
-                if (_filenamesToDownloadOrExtract == null || !_filenamesToDownloadOrExtract.Any())
-                    _filenamesToDownloadOrExtract = this._settings
-                                                        .GetFilenamesToDownloadOrExtract(this._settings
-                                                                                             .ConversionSettings
-                                                                                             .StreetBasedAddress
-                                                                                             .Filenames);
-                return _filenamesToDownloadOrExtract;
+                if (String.IsNullOrWhiteSpace(_archiveDirectory))
+                    _archiveDirectory = this.Settings
+                                            .GetAbsoluteDirectory(this.Settings
+                                                                      .ConversionSettings
+                                                                      .StreetBasedAddress
+                                                                      .ArchiveDirectory);
+                if (!Directory.Exists(_archiveDirectory))
+                    Directory.CreateDirectory(_archiveDirectory);
+
+                return _archiveDirectory;
+            }
+        }
+
+        private string _filenameForArchive;
+        /// <summary>
+        /// Gets the filename for archive.
+        /// </summary>
+        public override string FilenameForArchive
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(_filenameForArchive))
+                    _filenameForArchive = this.Settings
+                                              .GetFilenameForArchive(this.Settings
+                                                                         .ConversionSettings
+                                                                         .StreetBasedAddress
+                                                                         .ArchiveFilename);
+                return _filenameForArchive;
             }
         }
         #endregion

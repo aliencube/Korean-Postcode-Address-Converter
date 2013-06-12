@@ -49,6 +49,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         }
 
         /// <summary>
+        /// Gets or sets the archive directory.
+        /// </summary>
+        [ConfigurationProperty("archiveDirectory", IsRequired = true)]
+        public DirectoryElement ArchiveDirectory
+        {
+            get { return (DirectoryElement)this["archiveDirectory"]; }
+            set { this["archiveDirectory"] = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the filename to archive.
         /// </summary>
         [ConfigurationProperty("archiveFilename", IsRequired = true)]

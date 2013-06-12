@@ -15,11 +15,32 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
     /// </summary>
     public abstract class BaseAddressService : IBaseAddressService
     {
+        #region Constructors
+        /// <summary>
+        /// Initialises a new instance of the BaseAddressService object.
+        /// </summary>
+        /// <param name="settings">Configuration settings.</param>
+        protected BaseAddressService(Settings settings)
+        {
+            this.Settings = settings;
+        }
+        #endregion
+
         #region Properties
+        /// <summary>
+        /// Gets the configuration settings.
+        /// </summary>
+        protected Settings Settings { get; private set; }
+
         /// <summary>
         /// Gets the download URL.
         /// </summary>
         public abstract string DownloadUrl { get; }
+
+        /// <summary>
+        /// Gets the list of filenames to download or extract.
+        /// </summary>
+        public abstract IList<string> FilenamesToDownloadOrExtract { get; }
 
         /// <summary>
         /// Gets the directory to download files.
@@ -32,9 +53,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         public abstract string ExtractDirectory { get; }
 
         /// <summary>
-        /// Gets the list of filenames to download or extract.
+        /// Gets the directory to archive files.
         /// </summary>
-        public abstract IList<string> FilenamesToDownloadOrExtract { get; }
+        public abstract string ArchiveDirectory { get; }
+
+        /// <summary>
+        /// Gets the filename for archive.
+        /// </summary>
+        public abstract string FilenameForArchive { get; }
         #endregion
 
         #region Methods - Abstract
@@ -119,8 +145,38 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         }
 
         /// <summary>
+        /// Checks if archived files already exist or not.
+        /// </summary>
+        /// <param name="extractDirectory">Directory where extracted files are located.</param>
+        /// <param name="archiveDirectory">Directory where archived files are located.</param>
+        /// <returns>Returns <c>True</c>, if archived files exist; otherwise returns <c>False</c>.</returns>
+        protected virtual bool ExistArhives(string extractDirectory, string archiveDirectory)
+        {
+            var filename = Directory.GetFiles(extractDirectory)
+                                    .Select(p => p.Split(this.Settings
+                                                             .ConversionSettings
+                                                             .SegmentSeparatorForDirectory
+                                                             .Delimiters
+                                                             .ToCharArray(),
+                                                         StringSplitOptions.RemoveEmptyEntries)
+                                                  .Last())
+                                    .First();
+            var timestamp = filename.Split(this.Settings
+                                               .ConversionSettings
+                                               .SegmentSeparatorForFile
+                                               .Delimiters
+                                               .ToCharArray(),
+                                           StringSplitOptions.RemoveEmptyEntries)
+                                    .First();
+            return Directory.Exists(String.Format("{0}\\{1}", archiveDirectory, timestamp));
+        }
+
+        /// <summary>
         /// Archives XML documents generated.
         /// </summary>
+        /// <param name="filename">Filename for archive.</param>
+        /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
+        /// <param name="destinationDirectory">Destination directory where the archive file is stored.</param>
         public virtual void ZipXmlDocuments(string filename, string sourceDirectory, string destinationDirectory = null)
         {
             if (String.IsNullOrWhiteSpace(destinationDirectory))
@@ -132,6 +188,96 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                     zip.AddFile(filepath, String.Empty);
                 zip.Save();
             }
+        }
+
+        /// <summary>
+        /// Empty both downloads and extracts directory for cleanup.
+        /// </summary>
+        /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
+        public virtual void EmptyDirectories(bool archive = true)
+        {
+            foreach (var filepath in Directory.GetFiles(this.DownloadDirectory))
+                File.Delete(filepath);
+
+            var filename = Directory.GetFiles(this.ExtractDirectory)
+                                    .Select(p => p.Split(this.Settings
+                                                             .ConversionSettings
+                                                             .SegmentSeparatorForDirectory
+                                                             .Delimiters
+                                                             .ToCharArray(),
+                                                         StringSplitOptions.RemoveEmptyEntries)
+                                                  .Last())
+                                    .First();
+            var timestamp = filename.Split(this.Settings
+                                               .ConversionSettings
+                                               .SegmentSeparatorForFile
+                                               .Delimiters
+                                               .ToCharArray(),
+                                           StringSplitOptions.RemoveEmptyEntries)
+                                    .First();
+            var archivedirectory = String.Format("{0}\\{1}", this.ArchiveDirectory, timestamp);
+            if (!Directory.Exists(archivedirectory))
+                Directory.CreateDirectory(archivedirectory);
+
+            foreach (var filepath in Directory.GetFiles(this.ExtractDirectory))
+            {
+                if (archive)
+                    File.Delete(filepath);
+                else
+                {
+                    var archivename = filepath.Split(this.Settings
+                                                         .ConversionSettings
+                                                         .SegmentSeparatorForDirectory
+                                                         .Delimiters
+                                                         .ToCharArray(),
+                                                     StringSplitOptions.RemoveEmptyEntries)
+                                              .Last();
+                    File.Move(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Processes the requests.
+        /// </summary>
+        /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
+        public virtual void ProcessRequests(bool archive = true)
+        {
+            this.DownloadFiles();
+            this.ExtractFiles();
+
+            if (this.ExistArhives(this.ExtractDirectory, this.ArchiveDirectory))
+                return;
+
+            this.ConvertEncodings();
+            this.GetXmlDocuments();
+
+            if (archive)
+            {
+                var filename = Directory.GetFiles(this.ExtractDirectory)
+                                        .Select(p => p.Split(this.Settings
+                                                                 .ConversionSettings
+                                                                 .SegmentSeparatorForDirectory
+                                                                 .Delimiters
+                                                                 .ToCharArray(),
+                                                             StringSplitOptions.RemoveEmptyEntries)
+                                                      .Last())
+                                        .First();
+                var timestamp = filename.Split(this.Settings
+                                                   .ConversionSettings
+                                                   .SegmentSeparatorForFile
+                                                   .Delimiters
+                                                   .ToCharArray(),
+                                               StringSplitOptions.RemoveEmptyEntries)
+                                        .First();
+                var archivedirectory = String.Format("{0}\\{1}", this.ArchiveDirectory, timestamp);
+                if (!Directory.Exists(archivedirectory))
+                    Directory.CreateDirectory(archivedirectory);
+
+                this.ZipXmlDocuments(this.FilenameForArchive, this.ExtractDirectory, archivedirectory);
+            }
+
+            this.EmptyDirectories(archive);
         }
         #endregion
 

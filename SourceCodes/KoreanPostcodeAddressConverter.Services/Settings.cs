@@ -18,7 +18,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         ///	Initialises a new instance of the Settings object as private.
         /// </summary>
-        private Settings()
+        protected Settings()
         {
         }
         #endregion
@@ -70,6 +70,21 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                 throw new ConfigurationErrorsException("Download URL should start with \"http://\".");
 
             return url;
+        }
+
+        /// <summary>
+        /// Gets the unzip file path for command line process.
+        /// </summary>
+        /// <param name="element">Unzip path element.</param>
+        /// <exception cref="ConfigurationErrorsException">Throws when unzip file path has not been set.</exception>
+        /// <returns>Returns the unzip file path for command line process.</returns>
+        public string GetUnzipPath(UnzipPathElement element)
+        {
+            var path = element.Path;
+            if (String.IsNullOrWhiteSpace(path))
+                throw new ConfigurationErrorsException("Unzip file path has not been set");
+
+            return path;
         }
 
         /// <summary>
@@ -133,18 +148,18 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         }
 
         /// <summary>
-        /// Gets the unzip file path for command line process.
+        /// Gets the zip filename for archiving.
         /// </summary>
-        /// <param name="element">Unzip path element.</param>
-        /// <exception cref="ConfigurationErrorsException">Throws when unzip file path has not been set.</exception>
-        /// <returns>Returns the unzip file path for command line process.</returns>
-        public string GetUnzipPath(UnzipPathElement element)
+        /// <param name="element">Archive filename element.</param>
+        /// <exception cref="ConfigurationErrorsException">Throws when zip filename has not been set.</exception>
+        /// <returns>Returns the zip filename for archiving.</returns>
+        public string GetFilenameForArchive(FilenameElement element)
         {
-            var path = element.Path;
-            if (String.IsNullOrWhiteSpace(path))
-                throw new ConfigurationErrorsException("Unzip file path has not been set");
+            var filename = element.Filename;
+            if (String.IsNullOrWhiteSpace(filename))
+                throw new ConfigurationErrorsException("Zip filename for archive has not been set");
 
-            return path;
+            return filename;
         }
         #endregion
     }

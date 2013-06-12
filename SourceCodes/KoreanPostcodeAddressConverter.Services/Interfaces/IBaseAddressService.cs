@@ -14,6 +14,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         string DownloadUrl { get; }
 
         /// <summary>
+        /// Gets the list of filenames to download or extract.
+        /// </summary>
+        IList<string> FilenamesToDownloadOrExtract { get; }
+
+        /// <summary>
         /// Gets the directory to download files.
         /// </summary>
         string DownloadDirectory { get; }
@@ -24,9 +29,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         string ExtractDirectory { get; }
 
         /// <summary>
-        /// Gets the list of filenames to download or extract.
+        /// Gets the directory to archive files.
         /// </summary>
-        IList<string> FilenamesToDownloadOrExtract { get; }
+        string ArchiveDirectory { get; }
+
+        /// <summary>
+        /// Gets the filename for archive.
+        /// </summary>
+        string FilenameForArchive { get; }
         #endregion
 
         #region Methods
@@ -53,7 +63,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         /// <summary>
         /// Archives XML documents generated.
         /// </summary>
+        /// <param name="filename">Filename for archive.</param>
+        /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
+        /// <param name="destinationDirectory">Destination directory where the archive file is stored.</param>
         void ZipXmlDocuments(string filename, string sourceDirectory, string destinationDirectory = null);
+
+        /// <summary>
+        /// Processes the requests.
+        /// </summary>
+        /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
+        void ProcessRequests(bool archive = true);
         #endregion
     }
 }
