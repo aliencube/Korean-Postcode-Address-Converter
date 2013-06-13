@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
 {
@@ -37,6 +39,19 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         /// Gets the filename for archive.
         /// </summary>
         string FilenameForArchive { get; }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Occurs before the file download is started.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Downloading;
+
+        /// <summary>
+        /// Occurs after the file download is completed.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Downloaded;
+
         #endregion
 
         #region Methods

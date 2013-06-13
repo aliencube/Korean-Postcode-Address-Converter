@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Ionic.Zip;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Enums;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces;
@@ -61,6 +62,42 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// Gets the filename for archive.
         /// </summary>
         public abstract string FilenameForArchive { get; }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Occurs before the file download is started.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Downloading;
+
+        /// <summary>
+        /// Occurs after the file download is completed.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Downloaded;
+        #endregion
+
+        #region Event Handlers
+        /// <summary>
+        /// Occurs before the file download is started.
+        /// </summary>
+        /// <param name="e">Provides data for the file downloading started event.</param>
+        protected virtual void OnDownloading(StatusChangeEventArgs e)
+        {
+            var handler = this.Downloading;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs after the file download is completed.
+        /// </summary>
+        /// <param name="e">Provides data for the file downloading completed event.</param>
+        protected virtual void OnDownloaded(StatusChangeEventArgs e)
+        {
+            var handler = this.Downloaded;
+            if (handler != null)
+                handler(this, e);
+        }
         #endregion
 
         #region Methods - Abstract
@@ -249,6 +286,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
         public virtual void ProcessRequests(bool archive = true)
         {
+            this.OnStarting(new StatusChangeEventArgs("Starting the process"));
+
             this.DownloadFiles();
             this.ExtractFiles();
 

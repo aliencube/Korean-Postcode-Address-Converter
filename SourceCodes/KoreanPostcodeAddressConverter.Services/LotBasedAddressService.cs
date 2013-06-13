@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Excel;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers;
@@ -148,6 +149,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         }
         #endregion
 
+        #region Events
+        #endregion
+
         #region Methods
         /// <summary>
         /// Downloads files.
@@ -157,8 +161,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             using (var client = new WebClient())
             {
                 foreach (var filename in this.FilenamesToDownloadOrExtract)
+                {
+                    this.OnDownloading(new StatusChangeEventArgs(String.Format("Downloading a file - {0}", filename)));
+
                     client.DownloadFile(String.Format("{0}/{1}", this.DownloadUrl, filename),
-                                        String.Format("{0}\\{1}", this.DownloadDirectory, filename));
+                                            String.Format("{0}\\{1}", this.DownloadDirectory, filename));
+
+                    this.OnDownloaded(new StatusChangeEventArgs(String.Format("Downloaded the file - {0}", filename)));
+                }
             }
         }
 
