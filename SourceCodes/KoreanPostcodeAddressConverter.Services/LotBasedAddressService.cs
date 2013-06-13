@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Excel;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers;
 
@@ -193,7 +193,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                            .FilenameMappings
                            .Cast<FilenameMappingElement>()
                            .ToList();
-            foreach (var filepath in Directory.GetFiles(this.ExtractDirectory).Where(p => p.EndsWith(".xls")))
+            var filepaths = Directory.GetFiles(this.ExtractDirectory)
+                                     .Where(p => p.EndsWith(".xls"));
+            foreach (var filepath in filepaths)
             {
                 var segments = filepath.Split(this.Settings
                                                   .ConversionSettings
@@ -228,34 +230,15 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                            .Cast<FilenameMappingElement>()
                            .ToList();
 
-            var sheet = this.Settings
-                            .ConversionSettings
-                            .LotBasedAddress
-                            .ExcelWorksheetName
-                            .Worksheet;
-
             var filepath = Directory.GetFiles(this.ExtractDirectory)
                                     .Single(p => p.EndsWith(".xls") &&
                                                  p.Contains(maps.Single(q => q.Conversion).Replace));
 
-            var segments = filepath.Split(this.Settings
-                                              .ConversionSettings
-                                              .SegmentSeparatorForFile
-                                              .Delimiters
-                                              .ToCharArray(),
-                                          StringSplitOptions.RemoveEmptyEntries);
-
-            var extension = segments[segments.Length - 1];
-
-            var connectionString = String.Format("provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel {1}.0; HDR=NO; IMEX=1;\"",
-                                                 filepath,
-                                                 (extension.ToLower() == "xls" ? "8" : "12"));
-            using (var dt = new DataTable())
-            using (var connection = new OleDbConnection(connectionString))
+            using (var stream = File.Open(filepath, FileMode.Open, FileAccess.Read))
+            using (var reader = ExcelReaderFactory.CreateBinaryReader(stream))
+            using (var ds = reader.AsDataSet())
+            using (var dt = ds.Tables[0])
             {
-                var adapter = new OleDbDataAdapter("SELECT * FROM [" + sheet + "$]", connection);
-                adapter.Fill(dt);
-
                 var addresses = new List<LotBasedAddress>();
                 foreach (var dr in dt.Rows.Cast<DataRow>().Skip(2))
                 {
@@ -296,21 +279,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
         public override void LoadDatabase(string sourceDirectory)
         {
-            using (var context = new AddressDataContext())
-            {
-                var serialiser = new XmlSerializer(typeof(LotBasedAddresses));
-                context.LotBasedAddresses.RemoveAll();
-                foreach (var filepath in Directory.GetFiles(sourceDirectory).Where(p => p.EndsWith(".xml")))
-                {
-                    using (var stream = new FileStream(filepath, FileMode.Open))
-                    using (var reader = new XmlTextReader(stream))
-                    {
-                        var collection = (LotBasedAddresses)serialiser.Deserialize(reader);
-                        context.AddRange(collection.LotBasedAddress);
-                    }
-                }
-                context.SaveChanges();
-            }
+            throw new NotImplementedException();
         }
         #endregion
     }
