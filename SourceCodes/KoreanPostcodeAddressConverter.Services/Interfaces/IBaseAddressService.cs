@@ -43,9 +43,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
 
         #region Events
         /// <summary>
-        /// Occurs when status change event is raised.
+        /// Occurs when status changed event is raised.
         /// </summary>
-        event EventHandler<StatusChangeEventArgs> StatusChanged;
+        event EventHandler<StatusChangedEventArgs> StatusChanged;
+
+        /// <summary>
+        /// Occurs when exception thrown event is raised.
+        /// </summary>
+        event EventHandler<ExceptionThrownEventArgs> ExceptionThrown;
         #endregion
 
         #region Methods

@@ -61,7 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ConverterServiceType.cs" />
-    <Compile Include="Events\StatusChangeEventArgs.cs" />
+    <Compile Include="Events\ExceptionThrownEventArgs.cs" />
+    <Compile Include="Events\StatusChangedEventArgs.cs" />
     <Compile Include="LotBasedAddress.cs" />
     <Compile Include="Sanitisers\Int32Sanitiser.cs" />
     <Compile Include="Sanitisers\NullableBooleanSanitiser.cs" />

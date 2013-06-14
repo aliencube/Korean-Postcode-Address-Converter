@@ -66,21 +66,49 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
         #region Events
         /// <summary>
-        /// Occurs when status change event is raised.
+        /// Occurs when status changed event is raised.
         /// </summary>
-        public event EventHandler<StatusChangeEventArgs> StatusChanged;
+        public event EventHandler<StatusChangedEventArgs> StatusChanged;
+
+        /// <summary>
+        /// Occurs when exception thrown event is raised.
+        /// </summary>
+        public event EventHandler<ExceptionThrownEventArgs> ExceptionThrown;
         #endregion
 
         #region Event Handlers
         /// <summary>
-        /// Occurs when status change event is raised.
+        /// Occurs when status changed event is raised.
         /// </summary>
-        /// <param name="e">Provides data for the status change event.</param>
-        protected virtual void OnStatusChanged(StatusChangeEventArgs e)
+        /// <param name="e">Provides data for the status changed event.</param>
+        protected virtual void OnStatusChanged(StatusChangedEventArgs e)
         {
             var handler = StatusChanged;
             if (handler != null)
                 handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs when exception thrown event is raised.
+        /// </summary>
+        /// <param name="e">Provides data for the exception thrown event.</param>
+        protected virtual void OnExceptionThrown(ExceptionThrownEventArgs e)
+        {
+            var handler = ExceptionThrown;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs when extraction progress event is raised.
+        /// </summary>
+        /// <param name="sender">Object that triggers the event.</param>
+        /// <param name="e">Provides data for the extraction progress event.</param>
+        private void Zip_ExtractProgress(object sender, ExtractProgressEventArgs e)
+        {
+            var handler = StatusChanged;
+            if (handler != null)
+                handler(sender, new StatusChangedEventArgs(e.CurrentEntry.FileName));
         }
         #endregion
 
@@ -128,22 +156,34 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
             foreach (var filename in filenames)
             {
-                this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Unzipping a file - {0}", filename)));
+                this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Unzipping - {0}", filename)));
 
                 var entries = new List<string>();
-                using (var zip = ZipFile.Read(String.Format("{0}\\{1}", sourceDirectory, filename),
-                                              new ReadOptions() { Encoding = Encoding.GetEncoding(949) }))
+
+                try
                 {
-                    foreach (var entry in zip.Entries)
+                    using (var zip = ZipFile.Read(String.Format("{0}\\{1}", sourceDirectory, filename),
+                                                  new ReadOptions() { Encoding = Encoding.GetEncoding(949) }))
                     {
-                        entries.Add(entry.FileName);
-                        entry.Extract(destinationDirectory, ExtractExistingFileAction.OverwriteSilently);
+                        zip.ExtractProgress += Zip_ExtractProgress;
+
+                        foreach (var entry in zip.Entries)
+                        {
+                            entries.Add(String.Format("  {0}", entry.FileName));
+                            entry.Extract(destinationDirectory, ExtractExistingFileAction.OverwriteSilently);
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    this.OnExceptionThrown(new ExceptionThrownEventArgs(ex));
+                }
 
-                this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Unzipped the file - {0} to\n  {1}",
-                                                                        filename,
-                                                                        String.Join("\n  ", entries))));
+                var sb = new StringBuilder();
+                sb.AppendLine("Unzipped to");
+                foreach (var entry in entries)
+                    sb.AppendLine(entry);
+                this.OnStatusChanged(new StatusChangedEventArgs(sb.ToString()));
             }
         }
 
@@ -164,20 +204,31 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
             foreach (var filename in filenames)
             {
-                using (var process = new Process())
+                this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Unzipping - {0}", filename)));
+
+                try
                 {
-                    var psi = new ProcessStartInfo(unzippath)
+                    using (var process = new Process())
                     {
-                        UseShellExecute = false,
-                        WorkingDirectory = sourceDirectory,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        Arguments = String.Format("e {0} -o{1} *.xls -y", String.Format("{0}\\{1}", sourceDirectory, filename), destinationDirectory)
-                    };
-                    process.StartInfo = psi;
-                    process.Start();
-                    process.WaitForExit();
+                        var psi = new ProcessStartInfo(unzippath)
+                        {
+                            UseShellExecute = false,
+                            WorkingDirectory = sourceDirectory,
+                            RedirectStandardInput = true,
+                            RedirectStandardOutput = true,
+                            Arguments = String.Format("e {0} -o{1} *.xls -y", String.Format("{0}\\{1}", sourceDirectory, filename), destinationDirectory)
+                        };
+                        process.StartInfo = psi;
+                        process.Start();
+                        process.WaitForExit();
+                    }
                 }
+                catch (Exception ex)
+                {
+                    this.OnExceptionThrown(new ExceptionThrownEventArgs(ex));
+                }
+
+                this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Unzipped - {0}", filename)));
             }
         }
 
@@ -219,9 +270,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             if (String.IsNullOrWhiteSpace(destinationDirectory))
                 destinationDirectory = sourceDirectory;
 
-            this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Archiving files from {0} to {1}",
-                                                                     sourceDirectory,
-                                                                     destinationDirectory)));
+            this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Archiving to {0}", destinationDirectory)));
 
             using (var zip = new ZipFile(String.Format("{0}\\{1}", destinationDirectory, filename), Encoding.UTF8))
             {
@@ -230,7 +279,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                 zip.Save();
             }
 
-            this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Archived files to {0}", destinationDirectory)));
+            this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Archived to {0}", destinationDirectory)));
         }
 
         /// <summary>
@@ -239,7 +288,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
         public virtual void EmptyDirectories(bool archive = true)
         {
-            this.OnStatusChanged(new StatusChangeEventArgs("Emptying working directories"));
+            this.OnStatusChanged(new StatusChangedEventArgs("Emptying directories"));
 
             //  Deletes files in download directory.
             foreach (var filepath in Directory.GetFiles(this.DownloadDirectory))
@@ -283,7 +332,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                 }
             }
 
-            this.OnStatusChanged(new StatusChangeEventArgs("Emptied working directories"));
+            this.OnStatusChanged(new StatusChangedEventArgs("Emptied directories"));
         }
 
         /// <summary>

@@ -32,9 +32,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
 
         #region Events
         /// <summary>
-        /// Occurs when status change event is raised.
+        /// Occurs when status changed event is raised.
         /// </summary>
-        public event EventHandler<StatusChangeEventArgs> StatusChanged;
+        public event EventHandler<StatusChangedEventArgs> StatusChanged;
+
+        /// <summary>
+        /// Occurs when exception thrown event is raised.
+        /// </summary>
+        public event EventHandler<ExceptionThrownEventArgs> ExceptionThrown;
         #endregion
 
         #region Event Handlers
@@ -42,7 +47,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         /// Occurs when status change event is raised.
         /// </summary>
         /// <param name="e">Provides data for the status change event.</param>
-        protected virtual void OnStatusChanged(StatusChangeEventArgs e)
+        protected virtual void OnStatusChanged(StatusChangedEventArgs e)
         {
             var handler = StatusChanged;
             if (handler != null)
@@ -54,10 +59,18 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         /// </summary>
         /// <param name="sender">Object that triggers the event.</param>
         /// <param name="e">Provides data for the status change event.</param>
-        private void Status_Changed(object sender, StatusChangeEventArgs e)
+        private void Status_Changed(object sender, StatusChangedEventArgs e)
         {
             //  Bubbles up the event to the parent.
             var handler = StatusChanged;
+            if (handler != null)
+                handler(sender, e);
+        }
+
+        private void Exception_Thrown(object sender, ExceptionThrownEventArgs e)
+        {
+            //  Bubbles up the event to the parent.
+            var handler = ExceptionThrown;
             if (handler != null)
                 handler(sender, e);
         }
@@ -72,6 +85,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         {
             var service = GetService(serviceType);
             service.StatusChanged += Status_Changed;
+            service.ExceptionThrown += Exception_Thrown;
 
             service.ProcessRequests(ARCHIVE);
 

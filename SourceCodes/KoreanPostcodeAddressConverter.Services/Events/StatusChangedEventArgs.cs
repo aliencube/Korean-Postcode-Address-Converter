@@ -3,16 +3,16 @@
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events
 {
     /// <summary>
-    /// This provides data for status change event.
+    /// This provides data for status changed event.
     /// </summary>
-    public class StatusChangeEventArgs : EventArgs
+    public class StatusChangedEventArgs : EventArgs
     {
         #region Constructors
         /// <summary>
-        /// Initialises a new instance of the StatusChangeEventArge object.
+        /// Initialises a new instance of the StatusChangedEventArgs object.
         /// </summary>
         /// <param name="statusMessage">Status message.</param>
-        public StatusChangeEventArgs(string statusMessage = null)
+        public StatusChangedEventArgs(string statusMessage = null)
         {
             this.StatusMessage = statusMessage;
         }

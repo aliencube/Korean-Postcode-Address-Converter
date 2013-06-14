@@ -120,6 +120,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Console
 
             var factory = new UpdaterServiceFactory(settings);
             factory.StatusChanged += Factory_StatusChanged;
+            factory.ExceptionThrown += Factory_ExceptionThrown;
             factory.ProcessRequests(serviceType);
 
             if (_log.IsInfoEnabled)
@@ -127,14 +128,25 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Console
         }
 
         /// <summary>
-        /// Occurs when status change event is raised.
+        /// Occurs when status changed event is raised.
         /// </summary>
         /// <param name="sender">Object that triggers the event.</param>
-        /// <param name="e">Provides data for the status change event.</param>
-        static void Factory_StatusChanged(object sender, StatusChangeEventArgs e)
+        /// <param name="e">Provides data for the status changed event.</param>
+        static void Factory_StatusChanged(object sender, StatusChangedEventArgs e)
         {
             if (_log.IsInfoEnabled)
                 _log.Info(e.StatusMessage);
+        }
+
+        /// <summary>
+        /// Occurs when exception thrown event is raised.
+        /// </summary>
+        /// <param name="sender">Object that triggers the event.</param>
+        /// <param name="e">Provides data for the exception thrown event.</param>
+        static void Factory_ExceptionThrown(object sender, ExceptionThrownEventArgs e)
+        {
+            if (_log.IsWarnEnabled)
+                _log.Warn(e.Exception.Message);
         }
         #endregion
     }
