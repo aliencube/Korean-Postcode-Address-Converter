@@ -44,9 +44,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
 
         #region Event Handlers
         /// <summary>
-        /// Occurs when status change event is raised.
+        /// Occurs when status changed event is raised.
         /// </summary>
-        /// <param name="e">Provides data for the status change event.</param>
+        /// <param name="e">Provides data for the status changed event.</param>
         protected virtual void OnStatusChanged(StatusChangedEventArgs e)
         {
             var handler = StatusChanged;
@@ -55,10 +55,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         }
 
         /// <summary>
-        /// Occurs when status change event is raised.
+        /// Occurs when status changed event is raised.
         /// </summary>
         /// <param name="sender">Object that triggers the event.</param>
-        /// <param name="e">Provides data for the status change event.</param>
+        /// <param name="e">Provides data for the status changed event.</param>
         private void Status_Changed(object sender, StatusChangedEventArgs e)
         {
             //  Bubbles up the event to the parent.
@@ -67,6 +67,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
                 handler(sender, e);
         }
 
+        /// <summary>
+        /// Occurs when exception thrown event is raised.
+        /// </summary>
+        /// <param name="sender">Object that triggers the event.</param>
+        /// <param name="e">Provides data for the exception thrown event.</param>
         private void Exception_Thrown(object sender, ExceptionThrownEventArgs e)
         {
             //  Bubbles up the event to the parent.
