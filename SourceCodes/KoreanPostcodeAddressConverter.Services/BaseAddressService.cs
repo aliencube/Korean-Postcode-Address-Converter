@@ -106,8 +106,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="e">Provides data for the extraction progress event.</param>
         private void Zip_ExtractProgress(object sender, ExtractProgressEventArgs e)
         {
+            //  Bubbles up the event to the parent.
             var handler = StatusChanged;
-            if (handler != null)
+            if (handler != null && e.EventType == ZipProgressEventType.Extracting_AfterExtractEntry)
                 handler(sender, new StatusChangedEventArgs(e.CurrentEntry.FileName));
         }
         #endregion
