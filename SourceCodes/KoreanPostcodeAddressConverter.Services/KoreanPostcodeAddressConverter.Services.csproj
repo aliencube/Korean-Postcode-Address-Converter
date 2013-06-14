@@ -62,16 +62,12 @@
   <ItemGroup>
     <Compile Include="Enums\ConverterServiceType.cs" />
     <Compile Include="Events\StatusChangeEventArgs.cs" />
-    <Compile Include="LotBasedAddress.cs">
-      <DependentUpon>lot-based-address.xsd</DependentUpon>
-    </Compile>
+    <Compile Include="LotBasedAddress.cs" />
     <Compile Include="Sanitisers\Int32Sanitiser.cs" />
     <Compile Include="Sanitisers\NullableBooleanSanitiser.cs" />
     <Compile Include="Sanitisers\NullableInt32Sanitiser.cs" />
     <Compile Include="Sanitisers\WhiteSpaceSanitiser.cs" />
-    <Compile Include="StreetBasedAddress.cs">
-      <DependentUpon>street-based-address.xsd</DependentUpon>
-    </Compile>
+    <Compile Include="StreetBasedAddress.cs" />
     <Compile Include="StreetBasedAddressMetadata.cs" />
     <Compile Include="StreetBasedAddressService.cs" />
     <Compile Include="Helpers\ConversionHelper.cs" />
@@ -85,13 +81,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="lot-based-address.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
-    <None Include="street-based-address.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KoreanPostcodeAddressConverter.Configuration\KoreanPostcodeAddressConverter.Configuration.csproj">

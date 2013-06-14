@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://aliencube.org/schemas/2013/05/street-based-address"
+    xmlns:mstns="http://aliencube.org/schemas/2013/05/street-based-address"
+    targetNamespace="http://aliencube.org/schemas/2013/05/street-based-address"
+    elementFormDefault="qualified"
+>
+    <xs:annotation>
+        <xs:documentation xml:lang="en">This describes Korean postcode-address system based on street number system. Designed by Aliencube Consulting 2013-</xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="StreetBasedAddresses" type="StreetBasedAddresses" />
+
+    <xs:complexType name="StreetBasedAddresses">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="StreetBasedAddress" type="StreetBasedAddress" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StreetBasedAddress">
+        <xs:sequence>
+            <xs:element name="Postcode" type="xs:string" />
+            <xs:element name="SequenceNumber" type="xs:string" />
+            <xs:element name="Province" type="xs:string" />
+            <xs:element name="ProvinceEng" type="xs:string" nillable="true" />
+            <xs:element name="County" type="xs:string" nillable="true" />
+            <xs:element name="CountyEng" type="xs:string" nillable="true" />
+            <xs:element name="Suburb" type="xs:string" nillable="true" />
+            <xs:element name="SuburbEng" type="xs:string" nillable="true" />
+            <xs:element name="StreetNameCode" type="xs:string" nillable="true" />
+            <xs:element name="StreetName" type="xs:string" nillable="true" />
+            <xs:element name="StreetNameEng" type="xs:string" nillable="true" />
+            <xs:element name="Basement" type="xs:int" nillable="true" />
+            <xs:element name="BuildingNumberMajor" type="xs:int" nillable="true" />
+            <xs:element name="BuildingNumberMinor" type="xs:int" nillable="true" />
+            <xs:element name="BuildingCode" type="xs:string" nillable="true" />
+            <xs:element name="BuildingNameForBulk" type="xs:string" nillable="true" />
+            <xs:element name="BuildingName" type="xs:string" nillable="true" />
+            <xs:element name="RegisteredSuburbCode" type="xs:string" nillable="true" />
+            <xs:element name="RegisteredSuburb" type="xs:string" nillable="true" />
+            <xs:element name="Village" type="xs:string" nillable="true" />
+            <xs:element name="San" type="xs:boolean" nillable="true" />
+            <xs:element name="LotNumberMajor" type="xs:int" nillable="true" />
+            <xs:element name="LotNumberMinor" type="xs:int" nillable="true" />
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
