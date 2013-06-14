@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConver
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConverter.Web.UI", "KoreanPostcodeAddressConverter.Web.UI\KoreanPostcodeAddressConverter.Web.UI.csproj", "{A9E5CF79-5263-4D48-9B57-220F5FDD4701}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressUpdater.Services", "KoreanPostcodeAddressUpdater.Services\KoreanPostcodeAddressUpdater.Services.csproj", "{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = KoreanPostcodeAddressConverter.vsmdi
@@ -79,6 +81,16 @@ Global
 		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|x86.ActiveCfg = Release|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
