@@ -71,20 +71,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         public void ProcessRequests(ConverterServiceType serviceType)
         {
             var service = GetService(serviceType);
-            service.Downloading += Status_Changed;
-            service.Downloaded += Status_Changed;
-            service.Extracting += Status_Changed;
-            service.Extracted += Status_Changed;
-            service.Unzipping += Status_Changed;
-            service.Unzipped += Status_Changed;
-            service.Converting += Status_Changed;
-            service.Converted += Status_Changed;
-            service.GeneratingXmlDocument += Status_Changed;
-            service.GeneratedXmlDocument += Status_Changed;
-            service.Archiving += Status_Changed;
-            service.Archived += Status_Changed;
-            service.Emptying += Status_Changed;
-            service.Emptied += Status_Changed;
+            service.StatusChanged += Status_Changed;
 
             service.ProcessRequests(ARCHIVE);
 
