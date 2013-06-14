@@ -52,6 +52,65 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         /// </summary>
         event EventHandler<StatusChangeEventArgs> Downloaded;
 
+        /// <summary>
+        /// Occurs before the file extraction is started.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Extracting;
+
+        /// <summary>
+        /// Occurs after the file extraction is completed.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Extracted;
+
+        /// <summary>
+        /// Occurs before the file unzipping is started.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Unzipping;
+
+        /// <summary>
+        /// Occurs after the file unzipping is completed.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Unzipped;
+
+        /// <summary>
+        /// Occurs before the file encoding conversion is started.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Converting;
+
+        /// <summary>
+        /// Occurs after the file encoding conversion is completed.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Converted;
+
+        /// <summary>
+        /// Occurs before the XML document generation is started.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> GeneratingXmlDocument;
+
+        /// <summary>
+        /// Occurs after the XML document generation is completed.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> GeneratedXmlDocument;
+
+        /// <summary>
+        /// Occurs before the XML documents archiving is started.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Archiving;
+
+        /// <summary>
+        /// Occurs after the XML documents archiving is completed.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Archived;
+
+        /// <summary>
+        /// Occurs before emptying directories is started.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Emptying;
+
+        /// <summary>
+        /// Occurs after emptying directories is completed.
+        /// </summary>
+        event EventHandler<StatusChangeEventArgs> Emptied;
         #endregion
 
         #region Methods

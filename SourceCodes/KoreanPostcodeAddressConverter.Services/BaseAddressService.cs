@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Ionic.Zip;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Enums;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
@@ -74,6 +74,66 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// Occurs after the file download is completed.
         /// </summary>
         public event EventHandler<StatusChangeEventArgs> Downloaded;
+
+        /// <summary>
+        /// Occurs before the file extraction is started.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Extracting;
+
+        /// <summary>
+        /// Occurs after the file extraction is completed.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Extracted;
+
+        /// <summary>
+        /// Occurs before the file unzipping is started.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Unzipping;
+
+        /// <summary>
+        /// Occurs after the file unzipping is completed.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Unzipped;
+
+        /// <summary>
+        /// Occurs before the file encoding conversion is started.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Converting;
+
+        /// <summary>
+        /// Occurs after the file encoding conversion is completed.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Converted;
+
+        /// <summary>
+        /// Occurs before the XML document generation is started.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> GeneratingXmlDocument;
+
+        /// <summary>
+        /// Occurs after the XML document generation is completed.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> GeneratedXmlDocument;
+
+        /// <summary>
+        /// Occurs before the XML documents archiving is started.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Archiving;
+
+        /// <summary>
+        /// Occurs after the XML documents archiving is completed.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Archived;
+
+        /// <summary>
+        /// Occurs before emptying directories is started.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Emptying;
+
+        /// <summary>
+        /// Occurs after emptying directories is completed.
+        /// </summary>
+        public event EventHandler<StatusChangeEventArgs> Emptied;
         #endregion
 
         #region Event Handlers
@@ -83,7 +143,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="e">Provides data for the file downloading started event.</param>
         protected virtual void OnDownloading(StatusChangeEventArgs e)
         {
-            var handler = this.Downloading;
+            var handler = Downloading;
             if (handler != null)
                 handler(this, e);
         }
@@ -94,7 +154,139 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="e">Provides data for the file downloading completed event.</param>
         protected virtual void OnDownloaded(StatusChangeEventArgs e)
         {
-            var handler = this.Downloaded;
+            var handler = Downloaded;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs before the file extraction is started.
+        /// </summary>
+        /// <param name="e">Provides data for the file extraction started event.</param>
+        protected virtual void OnExtracting(StatusChangeEventArgs e)
+        {
+            var handler = Extracting;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs after the file extraction is completed.
+        /// </summary>
+        /// <param name="e">Provides data for the file extraction completed event.</param>
+        protected virtual void OnExtracted(StatusChangeEventArgs e)
+        {
+            var handler = Extracted;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs before the file unzipping is started.
+        /// </summary>
+        /// <param name="e">Provides data for the file unzipping started event.</param>
+        protected virtual void OnUnzipping(StatusChangeEventArgs e)
+        {
+            var handler = Unzipping;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs after the file unzipping is completed.
+        /// </summary>
+        /// <param name="e">Provides data for the file unzipping completed event.</param>
+        protected virtual void OnUnzipped(StatusChangeEventArgs e)
+        {
+            var handler = Unzipped;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs before the file encoding conversion is started.
+        /// </summary>
+        /// <param name="e">Provides data for the file encoding conversion started event.</param>
+        protected virtual void OnConverting(StatusChangeEventArgs e)
+        {
+            var handler = Converting;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs after the file encoding conversion is completed.
+        /// </summary>
+        /// <param name="e">Provides data for the file encoding conversion completed event.</param>
+        protected virtual void OnConverted(StatusChangeEventArgs e)
+        {
+            var handler = Converted;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs before the XML document generation is started.
+        /// </summary>
+        /// <param name="e">Provides data for the XML document generation started event.</param>
+        protected virtual void OnGeneratingXmlDocument(StatusChangeEventArgs e)
+        {
+            var handler = GeneratingXmlDocument;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs after the XML document generation is completed.
+        /// </summary>
+        /// <param name="e">Provides data for the XML document generation completed event.</param>
+        protected virtual void OnGeneratedXmlDocument(StatusChangeEventArgs e)
+        {
+            var handler = GeneratedXmlDocument;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs before the XML documents archiving is started.
+        /// </summary>
+        /// <param name="e">Provides data for the XML documents archiving started event.</param>
+        protected virtual void OnArchiving(StatusChangeEventArgs e)
+        {
+            var handler = Archiving;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs after the XML documents archiving is completed.
+        /// </summary>
+        /// <param name="e">Provides data for the XML documents archiving completed event.</param>
+        protected virtual void OnArchived(StatusChangeEventArgs e)
+        {
+            var handler = Archived;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs before emptying directories is started.
+        /// </summary>
+        /// <param name="e">Provides data for emptying directories started event.</param>
+        protected virtual void OnEmptying(StatusChangeEventArgs e)
+        {
+            var handler = Emptying;
+            if (handler != null)
+                handler(this, e);
+        }
+
+        /// <summary>
+        /// Occurs after emptying directories is completed.
+        /// </summary>
+        /// <param name="e">Provides data for emptying directories completed event.</param>
+        protected virtual void OnEmptied(StatusChangeEventArgs e)
+        {
+            var handler = Emptied;
             if (handler != null)
                 handler(this, e);
         }
@@ -144,12 +336,22 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
             foreach (var filename in filenames)
             {
+                this.OnUnzipping(new StatusChangeEventArgs(String.Format("Unzipping a file - {0}", filename)));
+
+                var entries = new List<string>();
                 using (var zip = ZipFile.Read(String.Format("{0}\\{1}", sourceDirectory, filename),
                                               new ReadOptions() { Encoding = Encoding.GetEncoding(949) }))
                 {
                     foreach (var entry in zip.Entries)
+                    {
+                        entries.Add(entry.FileName);
                         entry.Extract(destinationDirectory, ExtractExistingFileAction.OverwriteSilently);
+                    }
                 }
+
+                this.OnUnzipped(new StatusChangeEventArgs(String.Format("Unzipped the file - {0} to\n  {1}",
+                                                                        filename,
+                                                                        String.Join("\n  ", entries))));
             }
         }
 
@@ -225,12 +427,18 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             if (String.IsNullOrWhiteSpace(destinationDirectory))
                 destinationDirectory = sourceDirectory;
 
+            this.OnArchiving(new StatusChangeEventArgs(String.Format("Archiving files from {0} to {1}",
+                                                                     sourceDirectory,
+                                                                     destinationDirectory)));
+
             using (var zip = new ZipFile(String.Format("{0}\\{1}", destinationDirectory, filename), Encoding.UTF8))
             {
                 foreach (var filepath in Directory.GetFiles(sourceDirectory).Where(p => p.EndsWith(".xml")))
                     zip.AddFile(filepath, String.Empty);
                 zip.Save();
             }
+
+            this.OnArchived(new StatusChangeEventArgs(String.Format("Archived files to {0}", destinationDirectory)));
         }
 
         /// <summary>
@@ -239,9 +447,13 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
         public virtual void EmptyDirectories(bool archive = true)
         {
+            this.OnEmptying(new StatusChangeEventArgs("Emptying working directories"));
+
+            //  Deletes files in download directory.
             foreach (var filepath in Directory.GetFiles(this.DownloadDirectory))
                 File.Delete(filepath);
 
+            //  Deletes files in extract directory.
             var filename = Directory.GetFiles(this.ExtractDirectory)
                                     .Select(p => p.Split(this.Settings
                                                              .ConversionSettings
@@ -278,6 +490,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                     File.Move(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
                 }
             }
+
+            this.OnEmptied(new StatusChangeEventArgs("Emptied working directories"));
         }
 
         /// <summary>
@@ -286,8 +500,6 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
         public virtual void ProcessRequests(bool archive = true)
         {
-            this.OnStarting(new StatusChangeEventArgs("Starting the process"));
-
             this.DownloadFiles();
             this.ExtractFiles();
 

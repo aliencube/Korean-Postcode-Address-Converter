@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using FileHelpers;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 {
@@ -154,8 +155,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             using (var client = new WebClient())
             {
                 foreach (var filename in this.FilenamesToDownloadOrExtract)
+                {
+                    this.OnDownloading(new StatusChangeEventArgs(String.Format("Downloading a file - {0}", filename)));
+
                     client.DownloadFile(String.Format("{0}/{1}", this.DownloadUrl, filename),
-                                        String.Format("{0}\\{1}", this.DownloadDirectory, filename));
+                                            String.Format("{0}\\{1}", this.DownloadDirectory, filename));
+
+                    this.OnDownloaded(new StatusChangeEventArgs(String.Format("Downloaded the file - {0}", filename)));
+                }
             }
         }
 
@@ -164,7 +171,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// </summary>
         public override void ExtractFiles()
         {
+            this.OnExtracting(new StatusChangeEventArgs("Extracting files"));
+
             this.UnzipZipFiles(this.FilenamesToDownloadOrExtract, this.DownloadDirectory, this.ExtractDirectory);
+
+            this.OnExtracted(new StatusChangeEventArgs("Extracted files"));
         }
 
         /// <summary>
@@ -172,6 +183,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// </summary>
         public override void ConvertEncodings()
         {
+            this.OnConverting(new StatusChangeEventArgs());
+
             //foreach (var filepath in Directory.GetFiles(this.ExtractDirectory).Where(p => p.EndsWith(".txt")))
             //{
             //    var cp949 = Encoding.GetEncoding(949);
@@ -195,6 +208,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             //        writer.Write(reader.ReadToEnd());
             //    }
             //}
+
+            this.OnConverted(new StatusChangeEventArgs());
         }
 
         /// <summary>
@@ -209,6 +224,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             //foreach (var filepath in Directory.GetFiles(this.ExtractDirectory).Where(p => p.EndsWith(".csv")))
             foreach (var filepath in Directory.GetFiles(this.ExtractDirectory).Where(p => p.EndsWith(".txt")))
             {
+                var segments = filepath.Split(this.Settings
+                                                  .ConversionSettings
+                                                  .SegmentSeparatorForDirectory
+                                                  .Delimiters
+                                                  .ToCharArray(),
+                                              StringSplitOptions.RemoveEmptyEntries);
+                var filename = segments[segments.Length - 1];
+
+                this.OnGeneratingXmlDocument(new StatusChangeEventArgs(String.Format("Generating an XML document from - {0}", filename)));
+
                 var address = csv.ReadFile(filepath);
                 var addresses = new StreetBasedAddresses() { StreetBasedAddress = address };
 
@@ -218,6 +243,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                     var serialiser = new XmlSerializer(typeof(StreetBasedAddresses));
                     serialiser.Serialize(writer, addresses);
                 }
+
+                //this.OnGeneratedXmlDocument(new StatusChangeEventArgs(String.Format("Generated the XML document - {0}", filename.Replace(".csv", ".xml"))));
+                this.OnGeneratedXmlDocument(new StatusChangeEventArgs(String.Format("Generated the XML document - {0}", filename.Replace(".txt", ".xml"))));
             }
         }
 

@@ -7,9 +7,9 @@ using System.Text;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Excel;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
@@ -177,6 +177,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// </summary>
         public override void ExtractFiles()
         {
+            this.OnExtracting(new StatusChangeEventArgs("Extracting files"));
+
             //  Extracts .zip files.
             this.UnzipZipFiles(this.FilenamesToDownloadOrExtract, this.DownloadDirectory);
 
@@ -189,6 +191,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                                unzippath,
                                this.DownloadDirectory,
                                this.ExtractDirectory);
+
+            this.OnExtracted(new StatusChangeEventArgs("Extracted files"));
         }
 
         /// <summary>
@@ -214,6 +218,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                                                   .ToCharArray(),
                                               StringSplitOptions.RemoveEmptyEntries);
                 var filename = segments[segments.Length - 1];
+
+                this.OnConverting(new StatusChangeEventArgs(String.Format("Converting a file - {0}", filename)));
+
                 foreach (var map in maps)
                 {
                     var converted = filename.Contains(map.Search) ? filepath.Replace(map.Search, map.Replace) : null;
@@ -225,6 +232,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                     File.Move(filepath, converted);
                     break;
                 }
+
+                this.OnConverted(new StatusChangeEventArgs(String.Format("Converted the file - {0}", filename)));
             }
         }
 
@@ -243,6 +252,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             var filepath = Directory.GetFiles(this.ExtractDirectory)
                                     .Single(p => p.EndsWith(".xls") &&
                                                  p.Contains(maps.Single(q => q.Conversion).Replace));
+
+            var segments = filepath.Split(this.Settings
+                                              .ConversionSettings
+                                              .SegmentSeparatorForDirectory
+                                              .Delimiters
+                                              .ToCharArray(),
+                                          StringSplitOptions.RemoveEmptyEntries);
+            var filename = segments[segments.Length - 1];
+
+            this.OnGeneratingXmlDocument(new StatusChangeEventArgs(String.Format("Generating an XML document from - {0}", filename)));
 
             using (var stream = File.Open(filepath, FileMode.Open, FileAccess.Read))
             using (var reader = ExcelReaderFactory.CreateBinaryReader(stream))
@@ -281,6 +300,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                     serialiser.Serialize(writer, address);
                 }
             }
+
+            this.OnGeneratedXmlDocument(new StatusChangeEventArgs(String.Format("Generated the XML document - {0}", filename.Replace(".xls", ".xml"))));
         }
 
         /// <summary>

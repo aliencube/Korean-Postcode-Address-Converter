@@ -12,7 +12,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events
         /// Initialises a new instance of the StatusChangeEventArge object.
         /// </summary>
         /// <param name="statusMessage">Status message.</param>
-        public StatusChangeEventArgs(string statusMessage)
+        public StatusChangeEventArgs(string statusMessage = null)
         {
             this.StatusMessage = statusMessage;
         }
