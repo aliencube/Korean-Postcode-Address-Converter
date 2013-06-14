@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Aliencube.Utilities.KoreanPostcodeAddressConverter.Console</RootNamespace>
-    <AssemblyName>KoreanPostcodeAddressConverter.Console</AssemblyName>
+    <AssemblyName>KoreanPostcodeAddressConverterConsole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -53,6 +53,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="run.cmd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KoreanPostcodeAddressConverter.Services\KoreanPostcodeAddressConverter.Services.csproj">
