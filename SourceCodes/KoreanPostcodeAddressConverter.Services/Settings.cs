@@ -10,33 +10,33 @@ using Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration;
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 {
     /// <summary>
-    /// This represents the configuration settings entity.
+    /// This represents the configuration settings entity and must be inherited for use.
     /// </summary>
-    public class Settings
+    public abstract class Settings
     {
         #region Constructors
-        /// <summary>
-        ///	Initialises a new instance of the Settings object as private.
-        /// </summary>
-        protected Settings()
-        {
-        }
+        ///// <summary>
+        /////	Initialises a new instance of the Settings object as private.
+        ///// </summary>
+        //private Settings()
+        //{
+        //}
         #endregion
 
         #region Properties
-        private static Settings _instance;
-        /// <summary>
-        /// Gets the instance of the settings object.
-        /// </summary>
-        public static Settings Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new Settings();
-                return _instance;
-            }
-        }
+        //private static Settings _instance;
+        ///// <summary>
+        ///// Gets the instance of the settings object.
+        ///// </summary>
+        //public static Settings Instance
+        //{
+        //    get
+        //    {
+        //        if (_instance == null)
+        //            _instance = new Settings();
+        //        return _instance;
+        //    }
+        //}
 
         /// <summary>
         /// Gets the Korean postcode-address conversion settings.
