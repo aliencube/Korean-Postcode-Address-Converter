@@ -211,13 +211,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                                      .Where(p => p.EndsWith(".xls"));
             foreach (var filepath in filepaths)
             {
-                var segments = filepath.Split(this.Settings
-                                                  .ConversionSettings
-                                                  .SegmentSeparatorForDirectory
-                                                  .Delimiters
-                                                  .ToCharArray(),
-                                              StringSplitOptions.RemoveEmptyEntries);
-                var filename = segments[segments.Length - 1];
+                var filename = ConversionHelper.GetFilenameFromFilepath(filepath, this.Settings);
 
                 this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Converting - {0}", filename)));
 
@@ -253,13 +247,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                                     .Single(p => p.EndsWith(".xls") &&
                                                  p.Contains(maps.Single(q => q.Conversion).Replace));
 
-            var segments = filepath.Split(this.Settings
-                                              .ConversionSettings
-                                              .SegmentSeparatorForDirectory
-                                              .Delimiters
-                                              .ToCharArray(),
-                                          StringSplitOptions.RemoveEmptyEntries);
-            var filename = segments[segments.Length - 1];
+            var filename = ConversionHelper.GetFilenameFromFilepath(filepath, this.Settings);
 
             this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Generating - {0}", filename.Replace(".xls", ".xml"))));
 

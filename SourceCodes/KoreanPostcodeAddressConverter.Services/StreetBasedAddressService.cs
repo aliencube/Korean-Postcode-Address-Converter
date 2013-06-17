@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using FileHelpers;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 {
@@ -224,13 +225,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             //foreach (var filepath in Directory.GetFiles(this.ExtractDirectory).Where(p => p.EndsWith(".csv")))
             foreach (var filepath in Directory.GetFiles(this.ExtractDirectory).Where(p => p.EndsWith(".txt")))
             {
-                var segments = filepath.Split(this.Settings
-                                                  .ConversionSettings
-                                                  .SegmentSeparatorForDirectory
-                                                  .Delimiters
-                                                  .ToCharArray(),
-                                              StringSplitOptions.RemoveEmptyEntries);
-                var filename = segments[segments.Length - 1];
+                var filename = ConversionHelper.GetFilenameFromFilepath(filepath, this.Settings);
 
                 this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Generating an XML document from - {0}", filename)));
 
