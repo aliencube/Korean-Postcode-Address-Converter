@@ -5,10 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using log4net;
-using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Enums;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services;
+using Settings = Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Settings;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Console
 {
