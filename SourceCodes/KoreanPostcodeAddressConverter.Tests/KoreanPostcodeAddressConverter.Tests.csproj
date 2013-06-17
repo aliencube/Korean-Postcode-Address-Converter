@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LotBasedAddressTest.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="StreetBasedAddressTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
