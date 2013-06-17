@@ -28,6 +28,23 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         }
 
         /// <summary>
+        /// Gets the timestamp of the file from the filename provided.
+        /// </summary>
+        /// <param name="filename">Filename.</param>
+        /// <param name="settings">Configuration settings instance.</param>
+        /// <returns>Returns the timestamp.</returns>
+        public static string GetTimestampFromFilename(string filename, Settings settings)
+        {
+            var timestamp = filename.Split(settings.ConversionSettings
+                                                   .SegmentSeparatorForFile
+                                                   .Delimiters
+                                                   .ToCharArray(),
+                                           StringSplitOptions.RemoveEmptyEntries)
+                                    .First();
+            return timestamp;
+        }
+
+        /// <summary>
         /// Sanitises all white spaces except space characters specified in Unicode.
         /// </summary>
         /// <param name="value">Value to check</param>
