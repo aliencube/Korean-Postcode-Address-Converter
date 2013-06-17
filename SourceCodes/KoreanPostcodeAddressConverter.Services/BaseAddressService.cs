@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers;
 using Ionic.Zip;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Enums;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
@@ -241,22 +242,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <returns>Returns <c>True</c>, if archived files exist; otherwise returns <c>False</c>.</returns>
         protected virtual bool ExistArhives(string extractDirectory, string archiveDirectory)
         {
-            var filename = Directory.GetFiles(extractDirectory)
-                                    .Select(p => p.Split(this.Settings
-                                                             .ConversionSettings
-                                                             .SegmentSeparatorForDirectory
-                                                             .Delimiters
-                                                             .ToCharArray(),
-                                                         StringSplitOptions.RemoveEmptyEntries)
-                                                  .Last())
-                                    .First();
-            var timestamp = filename.Split(this.Settings
-                                               .ConversionSettings
-                                               .SegmentSeparatorForFile
-                                               .Delimiters
-                                               .ToCharArray(),
-                                           StringSplitOptions.RemoveEmptyEntries)
-                                    .First();
+            var timestamp = ConversionHelper.GetTimestampFromFilename(Directory.GetFiles(extractDirectory)
+                                                                               .Select(p => ConversionHelper.GetFilenameFromFilepath(p, this.Settings))
+                                                                               .First(),
+                                                                      this.Settings);
             return Directory.Exists(String.Format("{0}\\{1}", archiveDirectory, timestamp));
         }
 
@@ -296,22 +285,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                 File.Delete(filepath);
 
             //  Deletes files in extract directory.
-            var filename = Directory.GetFiles(this.ExtractDirectory)
-                                    .Select(p => p.Split(this.Settings
-                                                             .ConversionSettings
-                                                             .SegmentSeparatorForDirectory
-                                                             .Delimiters
-                                                             .ToCharArray(),
-                                                         StringSplitOptions.RemoveEmptyEntries)
-                                                  .Last())
-                                    .First();
-            var timestamp = filename.Split(this.Settings
-                                               .ConversionSettings
-                                               .SegmentSeparatorForFile
-                                               .Delimiters
-                                               .ToCharArray(),
-                                           StringSplitOptions.RemoveEmptyEntries)
-                                    .First();
+            var timestamp = ConversionHelper.GetTimestampFromFilename(Directory.GetFiles(this.ExtractDirectory)
+                                                                               .Select(p => ConversionHelper.GetFilenameFromFilepath(p, this.Settings))
+                                                                               .First(),
+                                                                      this.Settings);
             var archivedirectory = String.Format("{0}\\{1}", this.ArchiveDirectory, timestamp);
             if (!Directory.Exists(archivedirectory))
                 Directory.CreateDirectory(archivedirectory);
@@ -322,13 +299,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                     File.Delete(filepath);
                 else if (filepath.EndsWith(".xml"))
                 {
-                    var archivename = filepath.Split(this.Settings
-                                                         .ConversionSettings
-                                                         .SegmentSeparatorForDirectory
-                                                         .Delimiters
-                                                         .ToCharArray(),
-                                                     StringSplitOptions.RemoveEmptyEntries)
-                                              .Last();
+                    var archivename = ConversionHelper.GetFilenameFromFilepath(filepath, this.Settings);
                     File.Move(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
                 }
             }
@@ -353,22 +324,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
             if (archive)
             {
-                var filename = Directory.GetFiles(this.ExtractDirectory)
-                                        .Select(p => p.Split(this.Settings
-                                                                 .ConversionSettings
-                                                                 .SegmentSeparatorForDirectory
-                                                                 .Delimiters
-                                                                 .ToCharArray(),
-                                                             StringSplitOptions.RemoveEmptyEntries)
-                                                      .Last())
-                                        .First();
-                var timestamp = filename.Split(this.Settings
-                                                   .ConversionSettings
-                                                   .SegmentSeparatorForFile
-                                                   .Delimiters
-                                                   .ToCharArray(),
-                                               StringSplitOptions.RemoveEmptyEntries)
-                                        .First();
+                var timestamp = ConversionHelper.GetTimestampFromFilename(Directory.GetFiles(this.ExtractDirectory)
+                                                                                   .Select(p => ConversionHelper.GetFilenameFromFilepath(p, this.Settings))
+                                                                                   .First(),
+                                                                          this.Settings);
                 var archivedirectory = String.Format("{0}\\{1}", this.ArchiveDirectory, timestamp);
                 if (!Directory.Exists(archivedirectory))
                     Directory.CreateDirectory(archivedirectory);
