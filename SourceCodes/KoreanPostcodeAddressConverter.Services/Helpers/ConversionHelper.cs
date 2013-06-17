@@ -11,6 +11,23 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
     {
         #region Methods
         /// <summary>
+        /// Gets the filename from the filepath provided.
+        /// </summary>
+        /// <param name="filepath">Full filepath.</param>
+        /// <param name="settings">Configuration settings instance.</param>
+        /// <returns>Returns the filename.</returns>
+        public static string GetFilenameFromFilepath(string filepath, Settings settings)
+        {
+            var segments = filepath.Split(settings.ConversionSettings
+                                                  .SegmentSeparatorForDirectory
+                                                  .Delimiters
+                                                  .ToCharArray(),
+                                          StringSplitOptions.RemoveEmptyEntries);
+            var filename = segments[segments.Length - 1];
+            return filename;
+        }
+
+        /// <summary>
         /// Sanitises all white spaces except space characters specified in Unicode.
         /// </summary>
         /// <param name="value">Value to check</param>
