@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -147,6 +148,55 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         }
         #endregion
 
+        #region Events
+        #endregion
+
+        #region Event Handlers
+        /// <summary>
+        /// Occurs when an asynchronous download operation successfully transfers some or all of the data.
+        /// </summary>
+        /// <param name="sender">Object that triggers the event.</param>
+        /// <param name="e">Provides data for the download progress changed event.</param>
+        private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage % 5 != 0)
+                return;
+
+            this.OnStatusChanged(new StatusChangedEventArgs(" ."));
+        }
+
+        /// <summary>
+        /// Occurs when an asynchronous file download operation completes.
+        /// </summary>
+        /// <param name="sender">Object that triggers the event.</param>
+        /// <param name="e">Provides data for the download completed event.</param>
+        private void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            var progress = e.UserState as StatusProgress;
+            if (progress == null)
+                return;
+
+            this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloaded - {0}", progress.Filename)));
+
+            var index = this.FilenamesToDownloadOrExtract.IndexOf(progress.Filename);
+            if (index == this.FilenamesToDownloadOrExtract.Count - 1)
+                return;
+
+            using (var client = new WebClient())
+            {
+                client.DownloadProgressChanged += Client_DownloadProgressChanged;
+                client.DownloadFileCompleted += Client_DownloadFileCompleted;
+
+                var filename = this.FilenamesToDownloadOrExtract[index + 1];
+                this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloading - {0}", filename)));
+
+                client.DownloadFileAsync(new Uri(String.Format("{0}/{1}", this.DownloadUrl, filename)),
+                                         String.Format("{0}\\{1}", this.DownloadDirectory, filename),
+                                         new StatusProgress(filename));
+            }
+        }
+        #endregion
+
         #region Methods
         /// <summary>
         /// Downloads files.
@@ -155,15 +205,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         {
             using (var client = new WebClient())
             {
-                foreach (var filename in this.FilenamesToDownloadOrExtract)
-                {
-                    this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloading a file - {0}", filename)));
+                client.DownloadProgressChanged += Client_DownloadProgressChanged;
+                client.DownloadFileCompleted += Client_DownloadFileCompleted;
 
-                    client.DownloadFile(String.Format("{0}/{1}", this.DownloadUrl, filename),
-                                            String.Format("{0}\\{1}", this.DownloadDirectory, filename));
+                var filename = this.FilenamesToDownloadOrExtract[0];
 
-                    this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloaded the file - {0}", filename)));
-                }
+                this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloading - {0}", filename)));
+
+                client.DownloadFileAsync(new Uri(String.Format("{0}/{1}", this.DownloadUrl, filename)),
+                                         String.Format("{0}\\{1}", this.DownloadDirectory, filename),
+                                         new StatusProgress(filename));
             }
         }
 
