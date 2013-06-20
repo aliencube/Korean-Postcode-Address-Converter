@@ -10,12 +10,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         /// <summary>
         /// Gets or sets the directory name.
         /// </summary>
-        [ConfigurationProperty("value", DefaultValue = "", IsRequired = true)]
+        [ConfigurationProperty("directory", DefaultValue = "", IsRequired = true)]
         [StringValidator(InvalidCharacters = "`@#$^&*=[]{}|;'\",<>?")]
-        public string Value
+        public string Directory
         {
-            get { return (string)this["value"]; }
-            set { this["value"] = value; }
+            get { return (string)this["directory"]; }
+            set { this["directory"] = value; }
         }
     }
 }

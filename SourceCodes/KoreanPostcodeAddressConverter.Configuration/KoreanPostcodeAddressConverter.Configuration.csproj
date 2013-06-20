@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FilepathElement.cs" />
     <Compile Include="SegmentDelimitersElement.cs" />
     <Compile Include="ExcelWorksheetNameElement.cs" />
     <Compile Include="FilenameMappingElement.cs" />
@@ -59,7 +60,6 @@
     <Compile Include="SegmentDelimitersForDirectoryElement.cs" />
     <Compile Include="SegmentDelimitersForFileElement.cs" />
     <Compile Include="StreetBasedAddressElement.cs" />
-    <Compile Include="UnzipPathElement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
