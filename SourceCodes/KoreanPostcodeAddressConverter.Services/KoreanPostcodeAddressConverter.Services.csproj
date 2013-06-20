@@ -63,6 +63,7 @@
     <Compile Include="Enums\ConverterServiceType.cs" />
     <Compile Include="Events\ExceptionThrownEventArgs.cs" />
     <Compile Include="Events\StatusChangedEventArgs.cs" />
+    <Compile Include="Events\StatusProgress.cs" />
     <Compile Include="LotBasedAddress.cs" />
     <Compile Include="Sanitisers\Int32Sanitiser.cs" />
     <Compile Include="Sanitisers\NullableBooleanSanitiser.cs" />

@@ -5,7 +5,7 @@ using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
 {
     /// <summary>
-    /// This provides interfaces to the AddressServiceService class.
+    /// This provides interfaces to the BaseAddressServiceService class.
     /// </summary>
     public interface IBaseAddressService
     {
