@@ -134,9 +134,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Console
         /// <param name="e">Provides data for the status changed event.</param>
         static void Factory_StatusChanged(object sender, StatusChangedEventArgs e)
         {
-            if (e.StatusMessage == " .")
-                System.Console.Write(e.StatusMessage);
-            else if (_log.IsInfoEnabled)
+            if (_log.IsInfoEnabled)
                 _log.Info(e.StatusMessage);
         }
 

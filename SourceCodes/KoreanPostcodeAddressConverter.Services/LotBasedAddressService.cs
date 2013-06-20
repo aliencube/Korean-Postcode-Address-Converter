@@ -209,18 +209,31 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             if (skipDownload)
                 return;
 
+            //using (var client = new WebClient())
+            //{
+            //    client.DownloadProgressChanged += Client_DownloadProgressChanged;
+            //    client.DownloadFileCompleted += Client_DownloadFileCompleted;
+
+            //    var filename = this.FilenamesToDownloadOrExtract[0];
+
+            //    this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloading - {0}", filename)));
+
+            //    client.DownloadFileAsync(new Uri(String.Format("{0}/{1}", this.DownloadUrl, filename)),
+            //                             String.Format("{0}\\{1}", this.DownloadDirectory, filename),
+            //                             new StatusProgress(filename));
+            //}
+
             using (var client = new WebClient())
             {
-                client.DownloadProgressChanged += Client_DownloadProgressChanged;
-                client.DownloadFileCompleted += Client_DownloadFileCompleted;
+                foreach (var filename in this.FilenamesToDownloadOrExtract)
+                {
+                    this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloading - {0}", filename)));
 
-                var filename = this.FilenamesToDownloadOrExtract[0];
+                    client.DownloadFile(String.Format("{0}/{1}", this.DownloadUrl, filename),
+                                            String.Format("{0}\\{1}", this.DownloadDirectory, filename));
 
-                this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloading - {0}", filename)));
-
-                client.DownloadFileAsync(new Uri(String.Format("{0}/{1}", this.DownloadUrl, filename)),
-                                         String.Format("{0}\\{1}", this.DownloadDirectory, filename),
-                                         new StatusProgress(filename));
+                    this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloaded - {0}", filename)));
+                }
             }
         }
 
