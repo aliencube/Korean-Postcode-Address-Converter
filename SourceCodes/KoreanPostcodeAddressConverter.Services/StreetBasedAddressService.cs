@@ -151,8 +151,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Downloads files.
         /// </summary>
-        public override void DownloadFiles()
+        /// <param name="skipDownload">Value that specifies whether to skip this download process or not. Default value is <c>False</c>.</param>
+        public override void DownloadFiles(bool skipDownload = false)
         {
+            if (skipDownload)
+                return;
+
             using (var client = new WebClient())
             {
                 foreach (var filename in this.FilenamesToDownloadOrExtract)

@@ -23,6 +23,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         #endregion
 
         #region Constants
+        private const bool SKIP_DOWNLOAD = false;
+        private const bool EMPTY = false;
         private const bool ARCHIVE = false;
         #endregion
 
@@ -92,7 +94,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
             service.StatusChanged += Status_Changed;
             service.ExceptionThrown += Exception_Thrown;
 
-            service.ProcessRequests(ARCHIVE);
+            service.ProcessRequests(SKIP_DOWNLOAD, EMPTY, ARCHIVE);
 
             //this.LoadDatabase(service.ArchiveDirectory, serviceType);
         }

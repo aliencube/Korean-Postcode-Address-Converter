@@ -57,7 +57,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         /// <summary>
         /// Downloads files.
         /// </summary>
-        void DownloadFiles();
+        /// <param name="skipDownload">Value that specifies whether to skip this download process or not. Default value is <c>False</c>.</param>
+        void DownloadFiles(bool skipDownload = false);
 
         /// <summary>
         /// Extracts files downloaded.
@@ -89,10 +90,19 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         void ZipXmlDocuments(string filename, string sourceDirectory, string destinationDirectory = null);
 
         /// <summary>
+        /// Empty both downloads and extracts directory for cleanup.
+        /// </summary>
+        /// <param name="empty">Value that specifies whether directories used for download and extract are emptied or not. Default value is <c>True</c>.</param>
+        /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
+        void EmptyDirectories(bool empty = true, bool archive = true);
+
+        /// <summary>
         /// Processes the requests.
         /// </summary>
+        /// <param name="skipDownload">Value that specifies whether to skip this download process or not. Default value is <c>False</c>.</param>
+        /// <param name="empty">Value that specifies whether directories used for download and extract are emptied or not. Default value is <c>True</c>.</param>
         /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
-        void ProcessRequests(bool archive = true);
+        void ProcessRequests(bool skipDownload = false, bool empty = true, bool archive = true);
         #endregion
     }
 }

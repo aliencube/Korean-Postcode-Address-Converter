@@ -118,7 +118,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Downloads files.
         /// </summary>
-        public abstract void DownloadFiles();
+        /// <param name="skipDownload">Value that specifies whether to skip this download process or not. Default value is <c>False</c>.</param>
+        public abstract void DownloadFiles(bool skipDownload = false);
 
         /// <summary>
         /// Extracts files downloaded.
@@ -275,14 +276,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Empty both downloads and extracts directory for cleanup.
         /// </summary>
+        /// <param name="empty">Value that specifies whether directories used for download and extract are emptied or not. Default value is <c>True</c>.</param>
         /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
-        public virtual void EmptyDirectories(bool archive = true)
+        public virtual void EmptyDirectories(bool empty = true, bool archive = true)
         {
             this.OnStatusChanged(new StatusChangedEventArgs("Emptying directories"));
 
             //  Deletes files in download directory.
-            foreach (var filepath in Directory.GetFiles(this.DownloadDirectory))
-                File.Delete(filepath);
+            if (empty)
+                foreach (var filepath in Directory.GetFiles(this.DownloadDirectory))
+                    File.Delete(filepath);
 
             //  Deletes files in extract directory.
             var timestamp = ConversionHelper.GetTimestampFromFilename(Directory.GetFiles(this.ExtractDirectory)
@@ -296,11 +299,21 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             foreach (var filepath in Directory.GetFiles(this.ExtractDirectory))
             {
                 if (archive || !filepath.EndsWith(".xml"))
-                    File.Delete(filepath);
+                {
+                    if (empty)
+                        File.Delete(filepath);
+                }
                 else if (filepath.EndsWith(".xml"))
                 {
                     var archivename = ConversionHelper.GetFilenameFromFilepath(filepath, this.Settings);
-                    File.Move(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
+
+                    if (File.Exists(String.Format("{0}\\{1}", archivedirectory, archivename)))
+                        File.Delete(String.Format("{0}\\{1}", archivedirectory, archivename));
+
+                    if (empty)
+                        File.Move(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
+                    else
+                        File.Copy(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
                 }
             }
 
@@ -310,10 +323,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Processes the requests.
         /// </summary>
+        /// <param name="skipDownload">Value that specifies whether to skip this download process or not. Default value is <c>False</c>.</param>
+        /// <param name="empty">Value that specifies whether directories used for download and extract are emptied or not. Default value is <c>True</c>.</param>
         /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
-        public virtual void ProcessRequests(bool archive = true)
+        public virtual void ProcessRequests(bool skipDownload = false, bool empty = true, bool archive = true)
         {
-            this.DownloadFiles();
+            this.DownloadFiles(skipDownload);
             this.ExtractFiles();
 
             if (this.ExistArhives(this.ExtractDirectory, this.ArchiveDirectory))
@@ -335,7 +350,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                 this.ZipXmlDocuments(this.FilenameForArchive, this.ExtractDirectory, archivedirectory);
             }
 
-            this.EmptyDirectories(archive);
+            this.EmptyDirectories(empty, archive);
         }
         #endregion
 

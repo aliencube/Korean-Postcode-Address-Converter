@@ -74,16 +74,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
             if (String.IsNullOrWhiteSpace(tmp))
                 return false;
 
-            if (tmp == "산")
+            if (tmp.Trim() == "산")
                 return true;
 
             int ir;
             bool br;
 
             var result = false;
-            if (Int32.TryParse(tmp, out ir))
+            if (Int32.TryParse(tmp.Trim(), out ir))
                 result = Convert.ToBoolean(ir);
-            else if (Boolean.TryParse(tmp, out br))
+            else if (Boolean.TryParse(tmp.Trim(), out br))
                 result = br;
 
             return result;
@@ -103,7 +103,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
             int ir;
 
             var result = 0;
-            if (Int32.TryParse(tmp, out ir))
+            if (Int32.TryParse(tmp.Trim(), out ir))
                 result = ir;
 
             return result;
@@ -150,12 +150,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
             if (String.IsNullOrWhiteSpace(tmp))
                 return DateTime.MinValue;
 
-            if (!Regex.IsMatch(tmp, @"\d{8}"))
+            if (!Regex.IsMatch(tmp.Trim(), @"\d{8}"))
                 return DateTime.MinValue;
 
-            var year = Convert.ToInt32(tmp.Substring(0, 4));
-            var month = Convert.ToInt32(tmp.Substring(4, 2));
-            var day = Convert.ToInt32(tmp.Substring(6, 2));
+            var year = Convert.ToInt32(tmp.Trim().Substring(0, 4));
+            var month = Convert.ToInt32(tmp.Trim().Substring(4, 2));
+            var day = Convert.ToInt32(tmp.Trim().Substring(6, 2));
 
             var result = new DateTime(year, month, day);
             return result;
