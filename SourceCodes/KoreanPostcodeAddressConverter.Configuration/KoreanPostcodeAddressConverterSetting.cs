@@ -8,6 +8,26 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
     public class KoreanPostcodeAddressConverterSettings : ConfigurationSection
     {
         /// <summary>
+        /// Gets or sets the process requests element.
+        /// </summary>
+        [ConfigurationProperty("processRequests", IsRequired = true)]
+        public ProcessRequestsElement ProcessRequests
+        {
+            get { return (ProcessRequestsElement)this["processRequests"]; }
+            set { this["processRequests"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the segment delimiters element.
+        /// </summary>
+        [ConfigurationProperty("segmentDelimiters", IsRequired = true)]
+        public SegmentDelimitersElement SegmentDelimiters
+        {
+            get { return (SegmentDelimitersElement)this["segmentDelimiters"]; }
+            set { this["segmentDelimiters"] = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the segment delimiters for directory element.
         /// </summary>
         [ConfigurationProperty("segmentDelimitersForDirectory", IsRequired = true)]

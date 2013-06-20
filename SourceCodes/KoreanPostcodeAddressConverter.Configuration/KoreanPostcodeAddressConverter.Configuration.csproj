@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SegmentDelimitersElement.cs" />
     <Compile Include="ExcelWorksheetNameElement.cs" />
     <Compile Include="FilenameMappingElement.cs" />
     <Compile Include="FilenameMappingsElementCollection.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="FilenamesElementCollection.cs" />
     <Compile Include="KoreanPostcodeAddressConverterSetting.cs" />
     <Compile Include="LotBasedAddressElement.cs" />
+    <Compile Include="ProcessRequestsElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SegmentDelimitersForCsvElement.cs" />
     <Compile Include="SegmentDelimitersForDirectoryElement.cs" />
