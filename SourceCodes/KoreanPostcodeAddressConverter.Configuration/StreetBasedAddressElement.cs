@@ -21,10 +21,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         /// Gets or sets the list of filenames.
         /// </summary>
         [ConfigurationProperty("filenames", IsRequired = true)]
-        [ConfigurationCollection(typeof(FilenamesElementCollection), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
-        public FilenamesElementCollection Filenames
+        [ConfigurationCollection(typeof(FilenameElementCollection), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
+        public FilenameElementCollection Filenames
         {
-            get { return (FilenamesElementCollection) this["filenames"]; }
+            get { return (FilenameElementCollection) this["filenames"]; }
             set { this["filenames"] = value; }
         }
 

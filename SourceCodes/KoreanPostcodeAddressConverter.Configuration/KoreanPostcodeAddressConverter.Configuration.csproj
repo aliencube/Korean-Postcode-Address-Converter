@@ -51,7 +51,7 @@
     <Compile Include="DirectoryElement.cs" />
     <Compile Include="DownloadUrlElement.cs" />
     <Compile Include="FilenameElement.cs" />
-    <Compile Include="FilenamesElementCollection.cs" />
+    <Compile Include="FilenameElementCollection.cs" />
     <Compile Include="KoreanPostcodeAddressConverterSetting.cs" />
     <Compile Include="LotBasedAddressElement.cs" />
     <Compile Include="ProcessRequestsElement.cs" />

@@ -132,7 +132,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="collection">The filenames collection element.</param>
         /// <exception cref="ConfigurationErrorsException">Throws when no files to download has been set.</exception>
         /// <returns>Returns the list of filenames to download.</returns>
-        public IList<string> GetFilenamesToDownloadOrExtract(FilenamesElementCollection collection)
+        public IList<string> GetFilenamesToDownloadOrExtract(FilenameElementCollection collection)
         {
             if (collection.Count == 0)
                 throw new ConfigurationErrorsException("Files to download or extract have not been set");

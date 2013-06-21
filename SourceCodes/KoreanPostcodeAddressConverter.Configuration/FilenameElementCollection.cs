@@ -5,7 +5,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
     /// <summary>
     /// This represents the filenames collection entity.
     /// </summary>
-    public class FilenamesElementCollection : ConfigurationElementCollection
+    public class FilenameElementCollection : ConfigurationElementCollection
     {
         #region Properties
         /// <summary>
