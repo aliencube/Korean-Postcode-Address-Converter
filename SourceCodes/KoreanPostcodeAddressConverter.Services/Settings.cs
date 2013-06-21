@@ -38,6 +38,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         //    }
         //}
 
+        private KoreanPostcodeAddressConverterSettings _conversionSettings;
         /// <summary>
         /// Gets the Korean postcode-address conversion settings.
         /// </summary>
@@ -50,10 +51,98 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                 return this._conversionSettings;
             }
         }
-        private KoreanPostcodeAddressConverterSettings _conversionSettings;
+
+        private string _unzipPath;
+        /// <summary>
+        /// Gets the unzip executable (eg. 7-zip) location path.
+        /// </summary>
+        public string UnzipPath
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(this._unzipPath))
+                    this._unzipPath = this._conversionSettings.UnzipPath.Filepath;
+                return this._unzipPath;
+            }
+        }
+
+        private IDictionary<string, string> _streetNameCorrections;
+        /// <summary>
+        /// Gets the list of street name corrections.
+        /// </summary>
+        public IDictionary<string, string> StreetNameCorrections
+        {
+            get
+            {
+                if (this._streetNameCorrections == null || !this._streetNameCorrections.Any())
+                    this._streetNameCorrections = this._conversionSettings
+                                                      .LocationMarkers
+                                                      .StreetNameCorrections
+                                                      .Cast<KeyValuePairElement>()
+                                                      .ToDictionary(p => p.Key, p => p.Value);
+                return this._streetNameCorrections;
+            }
+        }
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Gets the value to process requests.
+        /// </summary>
+        /// <typeparam name="T">Return type.</typeparam>
+        /// <param name="key">Property key.</param>
+        /// <returns>Returns the value to process requests.</returns>
+        public T GetProcessRequests<T>(string key)
+        {
+            var pi = this._conversionSettings
+                         .ProcessRequests
+                         .GetType()
+                         .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var value = (T) pi.GetValue(this, null);
+
+            return value;
+        }
+
+        /// <summary>
+        /// Gets the list of delimiters.
+        /// </summary>
+        /// <param name="key">Property key.</param>
+        /// <returns>Returns the list of delimiters.</returns>
+        public char[] GetDelimiters(string key)
+        {
+            var pi = this._conversionSettings
+                         .SegmentDelimiters
+                         .GetType()
+                         .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var value = (string)pi.GetValue(this, null);
+
+            if (String.IsNullOrWhiteSpace(value))
+                return null;
+
+            var result = value.ToCharArray();
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the list of location markers.
+        /// </summary>
+        /// <param name="key">Property key.</param>
+        /// <returns>Returns the list of location markers.</returns>
+        public char[] GetLocationMarkers(string key)
+        {
+            var pi = this._conversionSettings
+                         .LocationMarkers
+                         .GetType()
+                         .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var value = (string)pi.GetValue(this, null);
+
+            if (String.IsNullOrWhiteSpace(value))
+                return null;
+
+            var result = value.ToCharArray();
+            return result;
+        }
+
         /// <summary>
         /// Gets the download URL.
         /// </summary>
@@ -73,21 +162,6 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         }
 
         /// <summary>
-        /// Gets the unzip file path for command line process.
-        /// </summary>
-        /// <param name="element">Unzip path element.</param>
-        /// <exception cref="ConfigurationErrorsException">Throws when unzip file path has not been set.</exception>
-        /// <returns>Returns the unzip file path for command line process.</returns>
-        public string GetUnzipPath(UnzipPathElement element)
-        {
-            var path = element.Path;
-            if (String.IsNullOrWhiteSpace(path))
-                throw new ConfigurationErrorsException("Unzip file path has not been set");
-
-            return path;
-        }
-
-        /// <summary>
         /// Gets the absolute path of the given path.
         /// </summary>
         /// <param name="element">Directory element. It can contain either relative or absolute value.</param>
@@ -95,7 +169,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <returns>Returns the absolute path of the given path.</returns>
         public string GetAbsoluteDirectory(DirectoryElement element)
         {
-            var path = element.Value;
+            var path = element.Directory;
             if (String.IsNullOrWhiteSpace(path))
                 throw new ConfigurationErrorsException("Directory has not been set");
 

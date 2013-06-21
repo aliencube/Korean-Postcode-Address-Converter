@@ -90,12 +90,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         /// <summary>
         /// Gets or sets the street name corrections collection.
         /// </summary>
-        [ConfigurationProperty("streetCorrectioins", IsRequired = true)]
+        [ConfigurationProperty("streetNameCorrections", IsRequired = true)]
         [ConfigurationCollection(typeof(KeyValuePairElementCollection), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
-        public KeyValuePairElementCollection StreetCorrectioins
+        public KeyValuePairElementCollection StreetNameCorrections
         {
-            get { return (KeyValuePairElementCollection)this["streetCorrectioins"]; }
-            set { this["streetCorrectioins"] = value; }
+            get { return (KeyValuePairElementCollection)this["streetNameCorrections"]; }
+            set { this["streetNameCorrections"] = value; }
         }
     }
 }

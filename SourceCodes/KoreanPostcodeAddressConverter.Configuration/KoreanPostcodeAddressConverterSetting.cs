@@ -43,8 +43,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         [ConfigurationProperty("locationMarkers", IsRequired = true)]
 		public LocationMarkersElement LocationMarkers
 		{
-            get { return (LocationMarkersElement)this["addressMarkers"]; }
-			set { this["addressMarkers"] = value; }
+            get { return (LocationMarkersElement)this["locationMarkers"]; }
+            set { this["locationMarkers"] = value; }
 		}
 
 		/// <summary>

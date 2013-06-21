@@ -78,12 +78,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         }
 
         /// <summary>
-        /// Gets or sets the value the block size for database loading at once.
+        /// Gets or sets the block size for database loading at once.
         /// </summary>
         [ConfigurationProperty("databaseLoadingBlockSize", DefaultValue = 50000, IsRequired = true)]
-        public long DatabaseLoadingBlockSize
+        public int DatabaseLoadingBlockSize
         {
-            get { return (long)this["databaseLoadingBlockSize"]; }
+            get { return (int)this["databaseLoadingBlockSize"]; }
             set { this["databaseLoadingBlockSize"] = value; }
         }
     }
