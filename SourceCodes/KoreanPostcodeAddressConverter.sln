@@ -14,9 +14,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConver
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConverter.Tests", "KoreanPostcodeAddressConverter.Tests\KoreanPostcodeAddressConverter.Tests.csproj", "{E8C22E7E-E9E1-4F7D-BC9F-44F61E5B707B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConverter.Web.UI", "KoreanPostcodeAddressConverter.Web.UI\KoreanPostcodeAddressConverter.Web.UI.csproj", "{A9E5CF79-5263-4D48-9B57-220F5FDD4701}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConverter.UpdaterServices", "KoreanPostcodeAddressConverter.UpdaterServices\KoreanPostcodeAddressConverter.UpdaterServices.csproj", "{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressUpdater.Services", "KoreanPostcodeAddressUpdater.Services\KoreanPostcodeAddressUpdater.Services.csproj", "{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConverter.Web.UI", "KoreanPostcodeAddressConverter.Web.UI\KoreanPostcodeAddressConverter.Web.UI.csproj", "{A9E5CF79-5263-4D48-9B57-220F5FDD4701}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{8A9B81BA-D116-4BBE-8FDA-924ACB650314}"
 	ProjectSection(SolutionItems) = preProject
@@ -91,16 +91,6 @@ Global
 		{E8C22E7E-E9E1-4F7D-BC9F-44F61E5B707B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E8C22E7E-E9E1-4F7D-BC9F-44F61E5B707B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E8C22E7E-E9E1-4F7D-BC9F-44F61E5B707B}.Release|x86.ActiveCfg = Release|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|x86.ActiveCfg = Release|Any CPU
 		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -111,6 +101,16 @@ Global
 		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}.Release|x86.ActiveCfg = Release|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A9E5CF79-5263-4D48-9B57-220F5FDD4701}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

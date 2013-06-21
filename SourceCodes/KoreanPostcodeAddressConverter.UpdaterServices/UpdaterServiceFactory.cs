@@ -22,12 +22,6 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         }
         #endregion
 
-        #region Constants
-        private const bool SKIP_DOWNLOAD = false;
-        private const bool EMPTY = false;
-        private const bool ARCHIVE = false;
-        #endregion
-
         #region Properties
         private readonly Settings _settings;
         #endregion
@@ -51,7 +45,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         /// <param name="e">Provides data for the status changed event.</param>
         protected virtual void OnStatusChanged(StatusChangedEventArgs e)
         {
-            var handler = StatusChanged;
+            var handler = this.StatusChanged;
             if (handler != null)
                 handler(this, e);
         }
@@ -64,7 +58,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         private void Status_Changed(object sender, StatusChangedEventArgs e)
         {
             //  Bubbles up the event to the parent.
-            var handler = StatusChanged;
+            var handler = this.StatusChanged;
             if (handler != null)
                 handler(sender, e);
         }
@@ -77,7 +71,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         private void Exception_Thrown(object sender, ExceptionThrownEventArgs e)
         {
             //  Bubbles up the event to the parent.
-            var handler = ExceptionThrown;
+            var handler = this.ExceptionThrown;
             if (handler != null)
                 handler(sender, e);
         }
@@ -90,13 +84,18 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         /// <param name="serviceType">Converter service type.</param>
         public void ProcessRequests(ConverterServiceType serviceType)
         {
-            var service = GetService(serviceType);
+            var service = this.GetService(serviceType);
             service.StatusChanged += Status_Changed;
             service.ExceptionThrown += Exception_Thrown;
 
-            service.ProcessRequests(SKIP_DOWNLOAD, EMPTY, ARCHIVE);
-
-            //this.LoadDatabase(service.ArchiveDirectory, serviceType);
+            service.ProcessRequests(service.SkipDownloadingFiles,
+                                    service.SkipExtractingFiles,
+                                    service.SkipConvertingFiles,
+                                    service.SkipGeneratingXmlDocuments,
+                                    service.SkipArchivingXmlDocuments,
+                                    service.SkipEmptyingDirectories,
+                                    service.SkipLoadingDatabase,
+                                    service.DatabaseLoadingBlockSize);
         }
 
         /// <summary>

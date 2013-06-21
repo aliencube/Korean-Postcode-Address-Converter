@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
 {
     /// <summary>
-    /// A test class for StreetBasedAddress class.
+    /// A test class for LotBasedAddressService class.
     /// </summary>
     [TestFixture]
-    public class StreetBasedAddressTest
+    public class LotBasedAddressServiceTest
     {
         private Settings _settings;
         private string _downloads;
@@ -46,13 +48,13 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
             this._filenames = this._settings
                                   .GetFilenamesToDownloadOrExtract(this._settings
                                                                        .ConversionSettings
-                                                                       .StreetBasedAddress
+                                                                       .LotBasedAddress
                                                                        .Filenames);
 
             this._unzippath = this._settings.UnzipPath;
             this._zipfilename = this._settings
                                     .ConversionSettings
-                                    .StreetBasedAddress
+                                    .LotBasedAddress
                                     .ArchiveFilename
                                     .Filename;
         }
@@ -92,56 +94,85 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
             if (!Convert.ToBoolean(ConfigurationManager.AppSettings["Test.Download"]))
                 Assert.Pass("Download ignored");
 
-            var service = new StreetBasedAddressService(this._settings);
+            var service = new LotBasedAddressService(this._settings);
             service.DownloadFiles(false);
 
             foreach (var filename in this._filenames)
                 Assert.IsTrue(File.Exists(String.Format("{0}\\{1}", this._downloads, filename)));
-
         }
 
         /// <summary>
         /// Tests to extract files from zip files.
         /// </summary>
         [Test]
-        public void _200_ExtractFiles_SendFilenames_StoreTxtFiles()
+        public void _200_UnzipFiles_SendFilenames_StoreExeOnly()
         {
-            var service = new StreetBasedAddressService(this._settings);
-            service.ExtractFiles(false);
+            var service = new LotBasedAddressService(this._settings);
+            var mi = service.GetType().GetMethod("UnzipZipFiles", BindingFlags.Instance | BindingFlags.NonPublic);
+            mi.Invoke(service, new object[] { this._filenames, this._downloads, null });
 
-            //Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".csv")) > 0);
-            Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".txt")) > 0);
+            Assert.IsTrue(Directory.GetFiles(this._downloads).Count(p => p.EndsWith(".exe")) == 1);
         }
 
         /// <summary>
-        /// Test the extracted files are converted their encoding from cp949 to utf8.
+        /// Test the self extracting zip files.
         /// </summary>
         [Test]
-        public void _300_ConvertEncodings_SetFilenames_StoreConvertedFiles()
+        public void _250_UnzipSfxFiles_SendFilenames_StoreXlsOnly()
         {
-            Assert.Pass("Not necessary");
+            var filenames = this._filenames
+                                .Select(p => p.Replace(".zip", ".exe"))
+                                .ToList();
 
-            //var service = new StreetBasedAddressService(this._settings);
+            var service = new LotBasedAddressService(this._settings);
+            var mi = service.GetType().GetMethod("UnzipSfxFiles", BindingFlags.Instance | BindingFlags.NonPublic);
+            mi.Invoke(service, new object[] { filenames, this._unzippath, this._downloads, this._extracts });
 
-            //if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".csv")))
-            //    service.ExtractFiles();
-
-            //service.ConvertEncodings();
-
-            //Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".csv")) > 0);
-            //Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".txt")) > 0);
+            Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".xls")) > 0);
         }
 
         /// <summary>
-        /// Tests the text files are converted to XML documents.
+        /// Test the extracted files are renamed.
+        /// </summary>
+        [Test]
+        public void _300_RenameExcelFiles_SendFilenames_RenameExcelFiles()
+        {
+            var maps = this._settings
+                           .ConversionSettings
+                           .LotBasedAddress
+                           .FilenameMappings
+                           .Cast<KeyValuePairElement>()
+                           .ToList();
+
+            var service = new LotBasedAddressService(this._settings);
+            service.ConvertEncodings(false);
+
+            var count = maps.Count(map => Directory.GetFiles(this._extracts)
+                                                   .Count(p => p.Contains(map.Value) && p.EndsWith(".xls")) == 1);
+            Assert.IsTrue(count == maps.Count);
+        }
+
+        /// <summary>
+        /// Tests the Excel files are converted to XML documents.
         /// </summary>
         [Test]
         public void _400_GenerateXmlDocuments_SendFilenames_StoreXmlDocuments()
         {
-            var service = new StreetBasedAddressService(this._settings);
+            var maps = this._settings
+                           .ConversionSettings
+                           .LotBasedAddress
+                           .FilenameMappings
+                           .Cast<KeyValuePairElement>()
+                           .ToList();
+
+            var filepath = Directory.GetFiles(this._extracts)
+                                    .Single(p => p.EndsWith(".xls") &&
+                                                 p.Contains(maps.Single(q => q.Default).Value));
+
+            var service = new LotBasedAddressService(this._settings);
             service.GenerateXmlDocuments(false);
 
-            Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".xml")) > 0);
+            Assert.IsTrue(File.Exists(filepath.Replace(".xls", ".xml")));
         }
 
         /// <summary>

@@ -504,7 +504,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="skipEmptying">Value that specifies whether to skip emptying working directories or not.</param>
         /// <param name="skipLoading">Value that specifies whether to skip loading XML documents to database or not.</param>
         /// <param name="blockSize">Number of records to load to database at once.</param>
-        public virtual void ProcessRequests(bool skipDownloading, bool skipExtracting, bool skipConverting, bool skipGenerating, bool skipArchiving, bool skipEmptying, bool skipLoading, int blockSize)
+        public virtual void ProcessRequests(bool skipDownloading,
+                                            bool skipExtracting,
+                                            bool skipConverting,
+                                            bool skipGenerating,
+                                            bool skipArchiving,
+                                            bool skipEmptying,
+                                            bool skipLoading,
+                                            int blockSize)
         {
             this.DownloadFiles(skipDownloading);
             this.ExtractFiles(skipExtracting);

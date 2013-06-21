@@ -62,7 +62,7 @@
       <Project>{0DC76C65-C23A-457C-AF85-6833E45FEECE}</Project>
       <Name>KoreanPostcodeAddressConverter.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KoreanPostcodeAddressUpdater.Services\KoreanPostcodeAddressUpdater.Services.csproj">
+    <ProjectReference Include="..\KoreanPostcodeAddressConverter.UpdaterServices\KoreanPostcodeAddressConverter.UpdaterServices.csproj">
       <Project>{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}</Project>
       <Name>KoreanPostcodeAddressUpdater.Services</Name>
     </ProjectReference>
