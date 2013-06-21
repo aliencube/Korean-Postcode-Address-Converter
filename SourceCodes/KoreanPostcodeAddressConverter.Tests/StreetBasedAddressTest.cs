@@ -39,9 +39,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
             if (!Directory.Exists(this._extracts))
                 Directory.CreateDirectory(this._extracts);
 
-            if (Directory.GetFiles(this._extracts).Any())
-                foreach (var file in Directory.GetFiles(this._extracts))
-                    File.Delete(file);
+            //if (Directory.GetFiles(this._extracts).Any())
+            //    foreach (var file in Directory.GetFiles(this._extracts))
+            //        File.Delete(file);
 
             this._filenames = this._settings
                                   .GetFilenamesToDownloadOrExtract(this._settings
@@ -49,10 +49,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
                                                                        .StreetBasedAddress
                                                                        .Filenames);
 
-            this._unzippath = this._settings
-                                  .GetUnzipPath(this._settings
-                                                    .ConversionSettings
-                                                    .UnzipPath);
+            this._unzippath = this._settings.UnzipPath;
             this._zipfilename = this._settings
                                     .ConversionSettings
                                     .StreetBasedAddress
@@ -96,7 +93,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
                 Assert.Pass("Download ignored");
 
             var service = new StreetBasedAddressService(this._settings);
-            service.DownloadFiles();
+            service.DownloadFiles(false);
 
             foreach (var filename in this._filenames)
                 Assert.IsTrue(File.Exists(String.Format("{0}\\{1}", this._downloads, filename)));
@@ -110,7 +107,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
         public void _200_ExtractFiles_SendFilenames_StoreTxtFiles()
         {
             var service = new StreetBasedAddressService(this._settings);
-            service.ExtractFiles();
+            service.ExtractFiles(false);
 
             //Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".csv")) > 0);
             Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".txt")) > 0);
@@ -139,21 +136,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
         /// Tests the text files are converted to XML documents.
         /// </summary>
         [Test]
-        public void _400_GetXmlDocuments_SendFilenames_StoreXmlDocuments()
+        public void _400_GenerateXmlDocuments_SendFilenames_StoreXmlDocuments()
         {
             var service = new StreetBasedAddressService(this._settings);
-
-            //if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".csv")))
-            if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".txt")))
-            {
-                //if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".csv")))
-                if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".txt")))
-                    service.ExtractFiles();
-
-                service.ConvertEncodings();
-            }
-
-            service.GetXmlDocuments();
+            service.GenerateXmlDocuments(false);
 
             Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".xml")) > 0);
         }
@@ -162,21 +148,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
         /// Tests XML documents are zipped.
         /// </summary>
         [Test]
-        public void _500_ZipXmlDocuments_SendFilenames_StoreZipFile()
+        public void _500_ArchiveXmlDocuments_SendFilenames_StoreZipFile()
         {
             var service = new StreetBasedAddressService(this._settings);
-
-            if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".xml")))
-            {
-                if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".txt")))
-                    service.ExtractFiles();
-
-                service.ConvertEncodings();
-
-                service.GetXmlDocuments();
-            }
-
-            service.ZipXmlDocuments(this._zipfilename, this._extracts, this._extracts);
+            service.ArchiveXmlDocuments(false, this._zipfilename, this._extracts, this._extracts);
 
             Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".zip")) == 1);
         }

@@ -41,9 +41,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
             if (!Directory.Exists(this._extracts))
                 Directory.CreateDirectory(this._extracts);
 
-            if (Directory.GetFiles(this._extracts).Any())
-                foreach (var file in Directory.GetFiles(this._extracts))
-                    File.Delete(file);
+            //if (Directory.GetFiles(this._extracts).Any())
+            //    foreach (var file in Directory.GetFiles(this._extracts))
+            //        File.Delete(file);
 
             this._filenames = this._settings
                                   .GetFilenamesToDownloadOrExtract(this._settings
@@ -51,10 +51,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
                                                                        .LotBasedAddress
                                                                        .Filenames);
 
-            this._unzippath = this._settings
-                                  .GetUnzipPath(this._settings
-                                                    .ConversionSettings
-                                                    .UnzipPath);
+            this._unzippath = this._settings.UnzipPath;
             this._zipfilename = this._settings
                                     .ConversionSettings
                                     .LotBasedAddress
@@ -98,7 +95,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
                 Assert.Pass("Download ignored");
 
             var service = new LotBasedAddressService(this._settings);
-            service.DownloadFiles();
+            service.DownloadFiles(false);
 
             foreach (var filename in this._filenames)
                 Assert.IsTrue(File.Exists(String.Format("{0}\\{1}", this._downloads, filename)));
@@ -121,7 +118,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
         /// Test the self extracting zip files.
         /// </summary>
         [Test]
-        public void _300_UnzipSfxFiles_SendFilenames_StoreXlsOnly()
+        public void _250_UnzipSfxFiles_SendFilenames_StoreXlsOnly()
         {
             var filenames = this._filenames
                                 .Select(p => p.Replace(".zip", ".exe"))
@@ -138,13 +135,13 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
         /// Test the extracted files are renamed.
         /// </summary>
         [Test]
-        public void _400_RenameExcelFiles_SendFilenames_RenameExcelFiles()
+        public void _300_RenameExcelFiles_SendFilenames_RenameExcelFiles()
         {
             var maps = this._settings
                            .ConversionSettings
                            .LotBasedAddress
                            .FilenameMappings
-                           .Cast<FilenameMappingElement>()
+                           .Cast<KeyValuePairElement>()
                            .ToList();
 
             var service = new LotBasedAddressService(this._settings);
@@ -158,10 +155,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
                 mi.Invoke(service, new object[] { filenames, this._unzippath, this._downloads, this._extracts });
             }
 
-            service.ConvertEncodings();
+            service.ConvertEncodings(false);
 
             var count = maps.Count(map => Directory.GetFiles(this._extracts)
-                                                   .Count(p => p.Contains(map.Replace) && p.EndsWith(".xls")) == 1);
+                                                   .Count(p => p.Contains(map.Value) && p.EndsWith(".xls")) == 1);
             Assert.IsTrue(count == maps.Count);
         }
 
@@ -169,32 +166,21 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
         /// Tests the Excel files are converted to XML documents.
         /// </summary>
         [Test]
-        public void _500_GetXmlDocuments_SendFilenames_StoreXmlDocuments()
+        public void _400_GenerateXmlDocuments_SendFilenames_StoreXmlDocuments()
         {
             var maps = this._settings
                            .ConversionSettings
                            .LotBasedAddress
                            .FilenameMappings
-                           .Cast<FilenameMappingElement>()
+                           .Cast<KeyValuePairElement>()
                            .ToList();
 
             var filepath = Directory.GetFiles(this._extracts)
                                     .Single(p => p.EndsWith(".xls") &&
-                                                 p.Contains(maps.Single(q => q.Conversion).Replace));
+                                                 p.Contains(maps.Single(q => q.Default).Value));
 
             var service = new LotBasedAddressService(this._settings);
-            if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".xls")))
-            {
-                var filenames = this._filenames
-                                    .Select(p => p.Replace(".zip", ".exe"))
-                                    .ToList();
-                var mi = service.GetType().GetMethod("UnzipSfxFiles", BindingFlags.Instance | BindingFlags.NonPublic);
-                mi.Invoke(service, new object[] { filenames, this._unzippath, this._downloads, this._extracts });
-
-                service.ConvertEncodings();
-            }
-
-            service.GetXmlDocuments();
+            service.GenerateXmlDocuments(false);
 
             Assert.IsTrue(File.Exists(filepath.Replace(".xls", ".xml")));
         }
@@ -203,27 +189,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
         /// Tests XML documents are zipped.
         /// </summary>
         [Test]
-        public void _600_ZipXmlDocuments_SendFilenames_StoreZipFile()
+        public void _500_ArchiveXmlDocuments_SendFilenames_StoreZipFile()
         {
             var service = new StreetBasedAddressService(this._settings);
-
-            if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".xml")))
-            {
-                if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".xls")))
-                {
-                    var filenames = this._filenames
-                                        .Select(p => p.Replace(".zip", ".exe"))
-                                        .ToList();
-                    var mi = service.GetType().GetMethod("UnzipSfxFiles", BindingFlags.Instance | BindingFlags.NonPublic);
-                    mi.Invoke(service, new object[] { filenames, this._unzippath, this._downloads, this._extracts });
-
-                    service.ConvertEncodings();
-                }
-
-                service.GetXmlDocuments();
-            }
-
-            service.ZipXmlDocuments(this._zipfilename, this._extracts, this._extracts);
+            service.ArchiveXmlDocuments(false, this._zipfilename, this._extracts, this._extracts);
 
             Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".zip")) == 1);
         }
