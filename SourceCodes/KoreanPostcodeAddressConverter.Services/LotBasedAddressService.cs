@@ -12,6 +12,7 @@ using Excel;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Models;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 {
@@ -248,12 +249,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             this.UnzipZipFiles(this.FilenamesToDownloadOrExtract, this.DownloadDirectory);
 
             //  Extracts self-extracting .exe files.
-            var unzippath = this.Settings
-                                .GetUnzipPath(this.Settings
-                                                  .ConversionSettings
-                                                  .UnzipPath);
             this.UnzipSfxFiles(this.FilenamesToDownloadOrExtract.Select(p => p.Replace(".zip", ".exe")),
-                               unzippath,
+                               this.UnzipPath,
                                this.DownloadDirectory,
                                this.ExtractDirectory);
 
@@ -270,7 +267,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                            .ConversionSettings
                            .LotBasedAddress
                            .FilenameMappings
-                           .Cast<FilenameMappingElement>()
+                           .Cast<KeyValuePairElement>()
                            .ToList();
             var filepaths = Directory.GetFiles(this.ExtractDirectory)
                                      .Where(p => p.EndsWith(".xls"));
@@ -282,7 +279,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
                 foreach (var map in maps)
                 {
-                    var converted = filename.Contains(map.Search) ? filepath.Replace(map.Search, map.Replace) : null;
+                    var converted = filename.Contains(map.Key) ? filepath.Replace(map.Key, map.Value) : null;
                     if (String.IsNullOrWhiteSpace(converted))
                         continue;
 
@@ -305,12 +302,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                            .ConversionSettings
                            .LotBasedAddress
                            .FilenameMappings
-                           .Cast<FilenameMappingElement>()
+                           .Cast<KeyValuePairElement>()
                            .ToList();
 
             var filepath = Directory.GetFiles(this.ExtractDirectory)
                                     .Single(p => p.EndsWith(".xls") &&
-                                                 p.Contains(maps.Single(q => q.Conversion).Replace));
+                                                 p.Contains(maps.Single(q => q.Default).Value));
 
             var filename = ConversionHelper.GetFilenameFromFilepath(filepath, this.Settings);
 

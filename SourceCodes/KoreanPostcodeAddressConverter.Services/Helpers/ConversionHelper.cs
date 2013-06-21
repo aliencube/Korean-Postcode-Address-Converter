@@ -18,10 +18,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns the filename.</returns>
         public static string GetFilenameFromFilepath(string filepath, Settings settings)
         {
-            var segments = filepath.Split(settings.ConversionSettings
-                                                  .SegmentSeparatorForDirectory
-                                                  .Delimiters
-                                                  .ToCharArray(),
+            var segments = filepath.Split(settings.GetDelimiters("forDirectory"),
                                           StringSplitOptions.RemoveEmptyEntries);
             var filename = segments[segments.Length - 1];
             return filename;
@@ -35,10 +32,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns the timestamp.</returns>
         public static string GetTimestampFromFilename(string filename, Settings settings)
         {
-            var timestamp = filename.Split(settings.ConversionSettings
-                                                   .SegmentSeparatorForFile
-                                                   .Delimiters
-                                                   .ToCharArray(),
+            var timestamp = filename.Split(settings.GetDelimiters("forFile"),
                                            StringSplitOptions.RemoveEmptyEntries)
                                     .First();
             return timestamp;

@@ -70,7 +70,7 @@
     <Compile Include="Sanitisers\NullableInt32Sanitiser.cs" />
     <Compile Include="Sanitisers\WhiteSpaceSanitiser.cs" />
     <Compile Include="Models\StreetBasedAddress.cs" />
-    <Compile Include="StreetBasedAddressMetadata.cs" />
+    <Compile Include="Models\StreetBasedAddressMetadata.cs" />
     <Compile Include="StreetBasedAddressService.cs" />
     <Compile Include="Helpers\ConversionHelper.cs" />
     <Compile Include="Interfaces\IBaseAddressService.cs" />

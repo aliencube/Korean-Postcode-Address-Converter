@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using FileHelpers;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Models;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 {

@@ -2,7 +2,7 @@
 using FileHelpers;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Sanitisers;
 
-namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
+namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Models
 {
     /// <summary>
     /// This represents the StreetBasedAddress XML node entity.

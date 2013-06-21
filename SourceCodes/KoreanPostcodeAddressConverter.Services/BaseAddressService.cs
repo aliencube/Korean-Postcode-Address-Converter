@@ -35,6 +35,175 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         protected Settings Settings { get; private set; }
 
         /// <summary>
+        /// Gets the value that specifies whether to skip downloading files or not.
+        /// </summary>
+        public bool SkipDownloadingFiles
+        {
+            get { return this.Settings.GetProcessRequests<bool>("skipDownloadingFiles"); }
+        }
+
+        /// <summary>
+        /// Gets the value that specifies whether to skip extracting files or not.
+        /// </summary>
+        public bool SkipExtractingFiles
+        {
+            get { return this.Settings.GetProcessRequests<bool>("skipExtractingFiles"); }
+        }
+
+        /// <summary>
+        /// Gets the value that specifies whether to skip converting files or not.
+        /// </summary>
+        public bool SkipConvertingFiles
+        {
+            get { return this.Settings.GetProcessRequests<bool>("skipConvertingFiles"); }
+        }
+
+        /// <summary>
+        /// Gets the value that specifies whether to skip generating XML documents or not.
+        /// </summary>
+        public bool SkipGeneratingXmlDocuments
+        {
+            get { return this.Settings.GetProcessRequests<bool>("skipGeneratingXmlDocuments"); }
+        }
+
+        /// <summary>
+        /// Gets the value that specifies whether to skip archiving XML documents or not.
+        /// </summary>
+        public bool SkipArchivingXmlDocuments
+        {
+            get { return this.Settings.GetProcessRequests<bool>("skipArchivingXmlDocuments"); }
+        }
+
+        /// <summary>
+        /// Gets the value that specifies whether to skip emptying directories or not.
+        /// </summary>
+        public bool SkipEmptyingDirectories
+        {
+            get { return this.Settings.GetProcessRequests<bool>("skipEmptyingDirectories"); }
+        }
+
+        /// <summary>
+        /// Gets the value that specifies whether to skip loading database or not.
+        /// </summary>
+        public bool SkipLoadingDatabase
+        {
+            get { return this.Settings.GetProcessRequests<bool>("skipLoadingDatabase"); }
+        }
+
+        /// <summary>
+        /// Gets the block size for database loading at once.
+        /// </summary>
+        public int DatabaseLoadingBlockSize
+        {
+            get { return this.Settings.GetProcessRequests<int>("databaseLoadingBlockSize"); }
+        }
+
+        /// <summary>
+        /// Gets the list of delimiters for a directory.
+        /// </summary>
+        public char[] DirectoryDelimiters
+        {
+            get { return this.Settings.GetDelimiters("forDirectory"); }
+        }
+
+        /// <summary>
+        /// Gets the list of delimiters for a file.
+        /// </summary>
+        public char[] FileDelimiters
+        {
+            get { return this.Settings.GetDelimiters("forFile"); }
+        }
+
+        /// <summary>
+        /// Gets the list of delimiters for a CSV formatted file.
+        /// </summary>
+        public char[] CsvDelimiters
+        {
+            get { return this.Settings.GetDelimiters("forCsv"); }
+        }
+
+        /// <summary>
+        /// Gets the unzip executable (eg. 7-zip) location path.
+        /// </summary>
+        public string UnzipPath
+        {
+            get { return this.Settings.UnzipPath; }
+        }
+
+        /// <summary>
+        /// Gets the list of Province markers.
+        /// </summary>
+        public char[] ProvinceMarkers
+        {
+            get { return this.Settings.GetLocationMarkers("province"); }
+        }
+
+        /// <summary>
+        /// Gets the list of County markers.
+        /// </summary>
+        public char[] CountyMarkers
+        {
+            get { return this.Settings.GetLocationMarkers("county"); }
+        }
+
+        /// <summary>
+        /// Gets the list of District markers.
+        /// </summary>
+        public char[] DistrictMarkers
+        {
+            get { return this.Settings.GetLocationMarkers("district"); }
+        }
+
+        /// <summary>
+        /// Gets the list of Suburb markers.
+        /// </summary>
+        public char[] SuburbMarkers
+        {
+            get { return this.Settings.GetLocationMarkers("suburb"); }
+        }
+
+        /// <summary>
+        /// Gets the list of Village markers.
+        /// </summary>
+        public char[] VillageMarkers
+        {
+            get { return this.Settings.GetLocationMarkers("village"); }
+        }
+
+        /// <summary>
+        /// Gets the list of Island markers.
+        /// </summary>
+        public char[] IslandMarkers
+        {
+            get { return this.Settings.GetLocationMarkers("island"); }
+        }
+
+        /// <summary>
+        /// Gets the list of San (ie. former forrest area) markers.
+        /// </summary>
+        public char[] SanMarkers
+        {
+            get { return this.Settings.GetLocationMarkers("san"); }
+        }
+
+        /// <summary>
+        /// Gets the list of Street markers.
+        /// </summary>
+        public char[] StreetMarkers
+        {
+            get { return this.Settings.GetLocationMarkers("street"); }
+        }
+
+
+        /// <summary>
+        /// Gets the list of street name corrections.
+        /// </summary>
+        public IDictionary<string, string> StreetNameCorrections
+        {
+            get { return this.Settings.StreetNameCorrections; }
+        }
+
+        /// <summary>
         /// Gets the download URL.
         /// </summary>
         public abstract string DownloadUrl { get; }
@@ -118,23 +287,26 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Downloads files.
         /// </summary>
-        /// <param name="skipDownload">Value that specifies whether to skip this download process or not. Default value is <c>False</c>.</param>
-        public abstract void DownloadFiles(bool skipDownload = false);
+        /// <param name="skipDownloading">Value that specifies whether to skip downloading files or not.</param>
+        public abstract void DownloadFiles(bool skipDownloading);
 
         /// <summary>
         /// Extracts files downloaded.
         /// </summary>
-        public abstract void ExtractFiles();
+        /// <param name="skipExtracting">Value that specifies whether to skip extracting files or not.</param>
+        public abstract void ExtractFiles(bool skipExtracting);
 
         /// <summary>
         /// Converts files extracted to appropriate encoding.
         /// </summary>
-        public abstract void ConvertEncodings();
+        /// <param name="skipConverting">Value that specifies whether to skip converting files or not.</param>
+        public abstract void ConvertEncodings(bool skipConverting);
 
         /// <summary>
-        /// Gets XML documents from the extracted and converted files with appropriate encoding.
+        /// Generates XML documents from the extracted and converted files with appropriate encoding.
         /// </summary>
-        public abstract void GetXmlDocuments();
+        /// <param name="skipGenerating">Value that specifies whether to skip generating XML documents or not.</param>
+        public abstract void GenerateXmlDocuments(bool skipGenerating);
 
         /// <summary>
         /// Loads objects to database.
@@ -256,7 +428,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="filename">Filename for archive.</param>
         /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
         /// <param name="destinationDirectory">Destination directory where the archive file is stored.</param>
-        public virtual void ZipXmlDocuments(string filename, string sourceDirectory, string destinationDirectory = null)
+        public virtual void ArchiveXmlDocuments(string filename, string sourceDirectory, string destinationDirectory = null)
         {
             if (String.IsNullOrWhiteSpace(destinationDirectory))
                 destinationDirectory = sourceDirectory;
