@@ -195,9 +195,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         /// <summary>
         /// Empty both downloads and extracts directory for cleanup.
         /// </summary>
-        /// <param name="skipEmptying">Value that specifies whether to skip emptying working directories or not.</param>
         /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
-        void EmptyDirectories(bool skipEmptying = false, bool skipArchiving = false);
+        /// <param name="skipEmptying">Value that specifies whether to skip emptying working directories or not.</param>
+        void EmptyDirectories(bool skipArchiving, bool skipEmptying);
 
         /// <summary>
         /// Loads objects to database.

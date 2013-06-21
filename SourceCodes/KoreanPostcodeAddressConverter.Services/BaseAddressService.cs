@@ -311,8 +311,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Loads objects to database.
         /// </summary>
+        /// <param name="skipLoading">Value that specifies whether to skip loading XML documents to database or not.</param>
         /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
-        public abstract void LoadDatabase(string sourceDirectory);
+        /// <param name="blockSize">Number of records to load to database at once.</param>
+        public abstract void LoadDatabase(bool skipLoading, string sourceDirectory, int blockSize);
         #endregion
 
         #region Methods - Virtual
@@ -425,10 +427,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Archives XML documents generated.
         /// </summary>
+        /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
         /// <param name="filename">Filename for archive.</param>
         /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
         /// <param name="destinationDirectory">Destination directory where the archive file is stored.</param>
-        public virtual void ArchiveXmlDocuments(string filename, string sourceDirectory, string destinationDirectory = null)
+        public virtual void ArchiveXmlDocuments(bool skipArchiving, string filename, string sourceDirectory, string destinationDirectory = null)
         {
             if (String.IsNullOrWhiteSpace(destinationDirectory))
                 destinationDirectory = sourceDirectory;
@@ -448,14 +451,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Empty both downloads and extracts directory for cleanup.
         /// </summary>
-        /// <param name="empty">Value that specifies whether directories used for download and extract are emptied or not. Default value is <c>True</c>.</param>
-        /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
-        public virtual void EmptyDirectories(bool empty = true, bool archive = true)
+        /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
+        /// <param name="skipEmptying">Value that specifies whether to skip emptying working directories or not.</param>
+        public virtual void EmptyDirectories(bool skipArchiving, bool skipEmptying)
         {
             this.OnStatusChanged(new StatusChangedEventArgs("Emptying directories"));
 
             //  Deletes files in download directory.
-            if (empty)
+            if (!skipEmptying)
                 foreach (var filepath in Directory.GetFiles(this.DownloadDirectory))
                     File.Delete(filepath);
 
@@ -470,23 +473,21 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
             foreach (var filepath in Directory.GetFiles(this.ExtractDirectory))
             {
-                if (archive || !filepath.EndsWith(".xml"))
-                {
-                    if (empty)
-                        File.Delete(filepath);
-                }
-                else if (filepath.EndsWith(".xml"))
+                if (skipArchiving && filepath.EndsWith(".xml"))
                 {
                     var archivename = ConversionHelper.GetFilenameFromFilepath(filepath, this.Settings);
 
+                    //  Deletes existing files first before copying or moving.
                     if (File.Exists(String.Format("{0}\\{1}", archivedirectory, archivename)))
                         File.Delete(String.Format("{0}\\{1}", archivedirectory, archivename));
 
-                    if (empty)
-                        File.Move(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
-                    else
+                    if (skipEmptying)
                         File.Copy(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
+                    else
+                        File.Move(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
                 }
+                else if (!skipEmptying)
+                    File.Delete(filepath);
             }
 
             this.OnStatusChanged(new StatusChangedEventArgs("Emptied directories"));
@@ -495,21 +496,26 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Processes the requests.
         /// </summary>
-        /// <param name="skipDownload">Value that specifies whether to skip this download process or not. Default value is <c>False</c>.</param>
-        /// <param name="empty">Value that specifies whether directories used for download and extract are emptied or not. Default value is <c>True</c>.</param>
-        /// <param name="archive">Value that specifies whether processed XML documents are zipped or not. Default value is <c>True</c>.</param>
-        public virtual void ProcessRequests(bool skipDownload = false, bool empty = true, bool archive = true)
+        /// <param name="skipDownloading">Value that specifies whether to skip downloading files or not.</param>
+        /// <param name="skipExtracting">Value that specifies whether to skip extracting files or not.</param>
+        /// <param name="skipConverting">Value that specifies whether to skip converting files or not.</param>
+        /// <param name="skipGenerating">Value that specifies whether to skip generating XML documents or not.</param>
+        /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
+        /// <param name="skipEmptying">Value that specifies whether to skip emptying working directories or not.</param>
+        /// <param name="skipLoading">Value that specifies whether to skip loading XML documents to database or not.</param>
+        /// <param name="blockSize">Number of records to load to database at once.</param>
+        public virtual void ProcessRequests(bool skipDownloading, bool skipExtracting, bool skipConverting, bool skipGenerating, bool skipArchiving, bool skipEmptying, bool skipLoading, int blockSize)
         {
-            this.DownloadFiles(skipDownload);
-            this.ExtractFiles();
+            this.DownloadFiles(skipDownloading);
+            this.ExtractFiles(skipExtracting);
 
             if (this.ExistArhives(this.ExtractDirectory, this.ArchiveDirectory))
                 return;
 
-            this.ConvertEncodings();
-            this.GetXmlDocuments();
+            this.ConvertEncodings(skipConverting);
+            this.GenerateXmlDocuments(skipGenerating);
 
-            if (archive)
+            if (!skipArchiving)
             {
                 var timestamp = ConversionHelper.GetTimestampFromFilename(Directory.GetFiles(this.ExtractDirectory)
                                                                                    .Select(p => ConversionHelper.GetFilenameFromFilepath(p, this.Settings))
@@ -519,10 +525,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                 if (!Directory.Exists(archivedirectory))
                     Directory.CreateDirectory(archivedirectory);
 
-                this.ZipXmlDocuments(this.FilenameForArchive, this.ExtractDirectory, archivedirectory);
+                this.ArchiveXmlDocuments(skipArchiving, this.FilenameForArchive, this.ExtractDirectory, archivedirectory);
             }
 
-            this.EmptyDirectories(empty, archive);
+            this.EmptyDirectories(skipArchiving, skipEmptying);
         }
         #endregion
 

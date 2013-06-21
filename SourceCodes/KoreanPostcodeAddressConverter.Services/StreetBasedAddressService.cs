@@ -202,11 +202,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Downloads files.
         /// </summary>
-        /// <param name="skipDownload">Value that specifies whether to skip this download process or not. Default value is <c>False</c>.</param>
-        public override void DownloadFiles(bool skipDownload = false)
+        /// <param name="skipDownloading">Value that specifies whether to skip downloading files or not.</param>
+        public override void DownloadFiles(bool skipDownloading)
         {
-            if (skipDownload)
+            if (skipDownloading)
+            {
+                this.OnStatusChanged(new StatusChangedEventArgs("Download skipped"));
                 return;
+            }
 
             //using (var client = new WebClient())
             //{
@@ -239,8 +242,15 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Extracts files downloaded.
         /// </summary>
-        public override void ExtractFiles()
+        /// <param name="skipExtracting">Value that specifies whether to skip extracting files or not.</param>
+        public override void ExtractFiles(bool skipExtracting)
         {
+            if (skipExtracting)
+            {
+                this.OnStatusChanged(new StatusChangedEventArgs("Extraction skipped"));
+                return;
+            }
+
             this.OnStatusChanged(new StatusChangedEventArgs("Extracting files"));
 
             this.UnzipZipFiles(this.FilenamesToDownloadOrExtract, this.DownloadDirectory, this.ExtractDirectory);
@@ -251,8 +261,15 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Converts files extracted to appropriate encoding.
         /// </summary>
-        public override void ConvertEncodings()
+        /// <param name="skipConverting">Value that specifies whether to skip converting files or not.</param>
+        public override void ConvertEncodings(bool skipConverting)
         {
+            if (skipConverting)
+            {
+                this.OnStatusChanged(new StatusChangedEventArgs("Conversion skipped"));
+                return;
+            }
+
             this.OnStatusChanged(new StatusChangedEventArgs());
 
             //foreach (var filepath in Directory.GetFiles(this.ExtractDirectory).Where(p => p.EndsWith(".txt")))
@@ -283,10 +300,17 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         }
 
         /// <summary>
-        /// Gets XML documents from the extracted and converted files with appropriate encoding.
+        /// Generates XML documents from the extracted and converted files with appropriate encoding.
         /// </summary>
-        public override void GetXmlDocuments()
+        /// <param name="skipGenerating">Value that specifies whether to skip generating XML documents or not.</param>
+        public override void GenerateXmlDocuments(bool skipGenerating)
         {
+            if (skipGenerating)
+            {
+                this.OnStatusChanged(new StatusChangedEventArgs("XML generation skipped"));
+                return;
+            }
+
             var csv = new DelimitedFileEngine<StreetBasedAddress>() { Encoding = Encoding.GetEncoding(949) };
             csv.Options.Delimiter = "|";
             csv.Options.IgnoreFirstLines = 1;
@@ -316,8 +340,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Loads objects to database.
         /// </summary>
+        /// <param name="skipLoading">Value that specifies whether to skip loading XML documents to database or not.</param>
         /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
-        public override void LoadDatabase(string sourceDirectory)
+        /// <param name="blockSize">Number of records to load to database at once.</param>
+        public override void LoadDatabase(bool skipLoading, string sourceDirectory, int blockSize)
         {
             throw new NotImplementedException();
         }
