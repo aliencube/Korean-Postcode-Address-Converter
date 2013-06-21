@@ -33,16 +33,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         }
 
         /// <summary>
-        /// Gets or sets the filename element having the specified key.
+        /// Gets or sets the filename element having the specified filename.
         /// </summary>
-        /// <param name="alias">Key value.</param>
-        /// <returns>Returns the filename element having the specified key.</returns>
-        public FilenameElement this[string alias]
+        /// <param name="filename">Filename.</param>
+        /// <returns>Returns the filename element having the specified filename.</returns>
+        public new FilenameElement this[string filename]
         {
-            get { return (FilenameElement)BaseGet(alias); }
+            get { return (FilenameElement)BaseGet(filename); }
             set
             {
-                var item = (FilenameElement)BaseGet(alias);
+                var item = (FilenameElement)BaseGet(filename);
                 if (item != null)
                 {
                     var index = BaseIndexOf(item);

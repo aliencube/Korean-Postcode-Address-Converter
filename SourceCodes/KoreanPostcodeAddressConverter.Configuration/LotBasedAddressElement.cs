@@ -32,21 +32,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         /// Gets or sets the list of filenames.
         /// </summary>
         [ConfigurationProperty("filenameMappings", IsRequired = true)]
-        [ConfigurationCollection(typeof(FilenameMappingsElementCollection), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
-        public FilenameMappingsElementCollection FilenameMappings
+        [ConfigurationCollection(typeof(KeyValuePairElementCollection), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
+        public KeyValuePairElementCollection FilenameMappings
         {
-            get { return (FilenameMappingsElementCollection)this["filenameMappings"]; }
+            get { return (KeyValuePairElementCollection)this["filenameMappings"]; }
             set { this["filenameMappings"] = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the Excel worksheet name.
-        /// </summary>
-        [ConfigurationProperty("excelWorksheetName", IsRequired = true)]
-        public ExcelWorksheetNameElement ExcelWorksheetName
-        {
-            get { return (ExcelWorksheetNameElement)this["excelWorksheetName"]; }
-            set { this["excelWorksheetName"] = value; }
         }
 
         /// <summary>

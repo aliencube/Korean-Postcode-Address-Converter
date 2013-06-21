@@ -18,6 +18,26 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressConver
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoreanPostcodeAddressUpdater.Services", "KoreanPostcodeAddressUpdater.Services\KoreanPostcodeAddressUpdater.Services.csproj", "{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{8A9B81BA-D116-4BBE-8FDA-924ACB650314}"
+	ProjectSection(SolutionItems) = preProject
+		..\Documents\Configurations\App.config = ..\Documents\Configurations\App.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{7A0F458E-3E64-4AB6-BF67-80A577F29537}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2013", "2013", "{6363D5F8-0279-4D07-978B-31BD01AD5518}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05", "05", "{8329C570-EC60-407D-BC38-6FD7AE1573BC}"
+	ProjectSection(SolutionItems) = preProject
+		..\Documents\Schemas\2013\05\lot-based-address.xsd = ..\Documents\Schemas\2013\05\lot-based-address.xsd
+		..\Documents\Schemas\2013\05\street-based-address.xsd = ..\Documents\Schemas\2013\05\street-based-address.xsd
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06", "06", "{B226544A-8D37-4420-A0C4-86744BEBB399}"
+	ProjectSection(SolutionItems) = preProject
+		..\Documents\Schemas\2013\06\street-based-address.xsd = ..\Documents\Schemas\2013\06\street-based-address.xsd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = KoreanPostcodeAddressConverter.vsmdi
@@ -94,5 +114,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6363D5F8-0279-4D07-978B-31BD01AD5518} = {7A0F458E-3E64-4AB6-BF67-80A577F29537}
+		{8329C570-EC60-407D-BC38-6FD7AE1573BC} = {6363D5F8-0279-4D07-978B-31BD01AD5518}
+		{B226544A-8D37-4420-A0C4-86744BEBB399} = {6363D5F8-0279-4D07-978B-31BD01AD5518}
 	EndGlobalSection
 EndGlobal

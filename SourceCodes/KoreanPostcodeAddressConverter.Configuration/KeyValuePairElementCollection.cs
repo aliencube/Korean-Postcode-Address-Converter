@@ -1,11 +1,11 @@
-using System.Configuration;
+﻿using System.Configuration;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
 {
     /// <summary>
-    /// This represents the filename mappings collection entity.
+    /// This represents the key/value pair collection entity.
     /// </summary>
-    public class FilenameMappingsElementCollection : ConfigurationElementCollection
+    public class KeyValuePairElementCollection : ConfigurationElementCollection
     {
         #region Properties
         /// <summary>
@@ -17,13 +17,13 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         }
 
         /// <summary>
-        /// Gets or sets the filename mapping element at the specified index location.
+        /// Gets or sets the key/value pair element at the specified index location.
         /// </summary>
-        /// <param name="index">The index location of the filename mapping element to remove.</param>
-        /// <returns>Returns the filename mapping element at the specified index location.</returns>
-        public FilenameMappingElement this[int index]
+        /// <param name="index">The index location of the key/value pair element to remove.</param>
+        /// <returns>Returns the key/value pair element at the specified index location.</returns>
+        public KeyValuePairElement this[int index]
         {
-            get { return (FilenameMappingElement)BaseGet(index); }
+            get { return (KeyValuePairElement)BaseGet(index); }
             set
             {
                 if (BaseGet(index) != null)
@@ -33,16 +33,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         }
 
         /// <summary>
-        /// Gets or sets the filename mapping element having the specified key.
+        /// Gets or sets the key/value pair element having the specified key.
         /// </summary>
-        /// <param name="alias">Key value.</param>
-        /// <returns>Returns the filename mapping element having the specified key.</returns>
-        public FilenameMappingElement this[string alias]
+        /// <param name="key">Key value.</param>
+        /// <returns>Returns the key/value pair element having the specified key.</returns>
+        public new KeyValuePairElement this[string key]
         {
-            get { return (FilenameMappingElement)BaseGet(alias); }
+            get { return (KeyValuePairElement)BaseGet(key); }
             set
             {
-                var item = (FilenameMappingElement)BaseGet(alias);
+                var item = (KeyValuePairElement)BaseGet(key);
                 if (item != null)
                 {
                     var index = BaseIndexOf(item);
@@ -61,7 +61,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         /// <returns>Returns a new ConfigurationElement.</returns>
         protected override ConfigurationElement CreateNewElement()
         {
-            return new FilenameMappingElement();
+            return new KeyValuePairElement();
         }
 
         /// <summary>
@@ -71,20 +71,20 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         /// <returns>Returns an Object that acts as the key for the specified ConfigurationElement.</returns>
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return ((FilenameMappingElement) element).Search;
+            return ((KeyValuePairElement)element).Key;
         }
 
         /// <summary>
-        /// Adds an filename mapping element to the ConfigurationElementCollection.
+        /// Adds an key/value pair element to the ConfigurationElementCollection.
         /// </summary>
         /// <param name="element">Item element.</param>
-        public void Add(FilenameMappingElement element)
+        public void Add(KeyValuePairElement element)
         {
             BaseAdd(element);
         }
 
         /// <summary>
-        /// Removes all filename mapping element objects from the collection.
+        /// Removes all key/value pair element objects from the collection.
         /// </summary>
         public void Clear()
         {
@@ -92,18 +92,18 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         }
 
         /// <summary>
-        /// Removes an filename mapping element from the collection.
+        /// Removes an key/value pair element from the collection.
         /// </summary>
-        /// <param name="name">Document type alias.</param>
-        public void Remove(string name)
+        /// <param name="key">Key value.</param>
+        public void Remove(string key)
         {
-            BaseRemove(name);
+            BaseRemove(key);
         }
 
         /// <summary>
-        /// Removes the filename mapping element at the specified index location.
+        /// Removes the key/value pair element at the specified index location.
         /// </summary>
-        /// <param name="index">The index location of the filename mapping element to remove.</param>
+        /// <param name="index">The index location of the key/value pair element to remove.</param>
         public void RemoveAt(int index)
         {
             BaseRemoveAt(index);

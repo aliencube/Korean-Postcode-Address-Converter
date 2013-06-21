@@ -80,8 +80,8 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
+    <None Include="..\..\Documents\Configurations\App.config">
+      <Link>App.config</Link>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
