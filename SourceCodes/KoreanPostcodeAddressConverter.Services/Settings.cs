@@ -94,11 +94,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <returns>Returns the value to process requests.</returns>
         public T GetProcessRequests<T>(string key)
         {
-            var pi = this._conversionSettings
-                         .ProcessRequests
-                         .GetType()
-                         .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-            var value = (T) pi.GetValue(this, null);
+            var instance = this._conversionSettings.ProcessRequests;
+            var pi = instance.GetType()
+                             .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var value = (T)pi.GetValue(instance, null);
 
             return value;
         }
@@ -110,11 +109,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <returns>Returns the list of delimiters.</returns>
         public char[] GetDelimiters(string key)
         {
-            var pi = this._conversionSettings
-                         .SegmentDelimiters
-                         .GetType()
-                         .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-            var value = (string)pi.GetValue(this, null);
+            var instance = this._conversionSettings.SegmentDelimiters;
+            var pi = instance.GetType()
+                             .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var value = (string)pi.GetValue(instance, null);
 
             if (String.IsNullOrWhiteSpace(value))
                 return null;
