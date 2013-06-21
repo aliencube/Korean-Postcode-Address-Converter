@@ -145,16 +145,6 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
                            .ToList();
 
             var service = new LotBasedAddressService(this._settings);
-
-            if (!Directory.GetFiles(this._extracts).Any(p => p.EndsWith(".xls")))
-            {
-                var filenames = this._filenames
-                                    .Select(p => p.Replace(".zip", ".exe"))
-                                    .ToList();
-                var mi = service.GetType().GetMethod("UnzipSfxFiles", BindingFlags.Instance | BindingFlags.NonPublic);
-                mi.Invoke(service, new object[] { filenames, this._unzippath, this._downloads, this._extracts });
-            }
-
             service.ConvertEncodings(false);
 
             var count = maps.Count(map => Directory.GetFiles(this._extracts)
