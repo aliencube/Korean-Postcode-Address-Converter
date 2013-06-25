@@ -38,6 +38,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06", "06", "{B226544A-8D37-
 		..\Documents\Schemas\2013\06\street-based-address.xsd = ..\Documents\Schemas\2013\06\street-based-address.xsd
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Databases", "Databases", "{0964D5C3-414A-45A1-B7B6-C4381F268D9C}"
+	ProjectSection(SolutionItems) = preProject
+		..\Documents\Databases\GenerateAddressTables.sql = ..\Documents\Databases\GenerateAddressTables.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = KoreanPostcodeAddressConverter.vsmdi

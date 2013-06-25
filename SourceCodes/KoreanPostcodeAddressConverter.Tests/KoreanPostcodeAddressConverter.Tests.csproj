@@ -71,7 +71,7 @@
     </ProjectReference>
     <ProjectReference Include="..\KoreanPostcodeAddressConverter.UpdaterServices\KoreanPostcodeAddressConverter.UpdaterServices.csproj">
       <Project>{5B0B1B2E-A49B-4C9F-B9C3-AB433B7EE99B}</Project>
-      <Name>KoreanPostcodeAddressUpdater.Services</Name>
+      <Name>KoreanPostcodeAddressConverter.UpdaterServices</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
