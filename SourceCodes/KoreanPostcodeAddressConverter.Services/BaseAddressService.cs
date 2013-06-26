@@ -427,11 +427,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Archives XML documents generated.
         /// </summary>
-        /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
         /// <param name="filename">Filename for archive.</param>
         /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
         /// <param name="destinationDirectory">Destination directory where the archive file is stored.</param>
-        public virtual void ArchiveXmlDocuments(bool skipArchiving, string filename, string sourceDirectory, string destinationDirectory = null)
+        public virtual void ArchiveXmlDocuments(string filename, string sourceDirectory, string destinationDirectory = null)
         {
             if (String.IsNullOrWhiteSpace(destinationDirectory))
                 destinationDirectory = sourceDirectory;
@@ -502,16 +501,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="skipGenerating">Value that specifies whether to skip generating XML documents or not.</param>
         /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
         /// <param name="skipEmptying">Value that specifies whether to skip emptying working directories or not.</param>
-        /// <param name="skipLoading">Value that specifies whether to skip loading XML documents to database or not.</param>
-        /// <param name="blockSize">Number of records to load to database at once.</param>
         public virtual void ProcessRequests(bool skipDownloading,
                                             bool skipExtracting,
                                             bool skipConverting,
                                             bool skipGenerating,
                                             bool skipArchiving,
-                                            bool skipEmptying,
-                                            bool skipLoading,
-                                            int blockSize)
+                                            bool skipEmptying)
         {
             this.DownloadFiles(skipDownloading);
             this.ExtractFiles(skipExtracting);
@@ -532,7 +527,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                 if (!Directory.Exists(archivedirectory))
                     Directory.CreateDirectory(archivedirectory);
 
-                this.ArchiveXmlDocuments(skipArchiving, this.FilenameForArchive, this.ExtractDirectory, archivedirectory);
+                this.ArchiveXmlDocuments(this.FilenameForArchive, this.ExtractDirectory, archivedirectory);
             }
 
             this.EmptyDirectories(skipArchiving, skipEmptying);

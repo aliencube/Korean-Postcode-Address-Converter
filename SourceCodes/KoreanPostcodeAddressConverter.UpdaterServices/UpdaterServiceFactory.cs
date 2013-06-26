@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Objects;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Enums;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Models;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
 {
@@ -93,9 +99,21 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
                                     service.SkipConvertingFiles,
                                     service.SkipGeneratingXmlDocuments,
                                     service.SkipArchivingXmlDocuments,
-                                    service.SkipEmptyingDirectories,
-                                    service.SkipLoadingDatabase,
-                                    service.DatabaseLoadingBlockSize);
+                                    service.SkipLoadingDatabase ? service.SkipEmptyingDirectories : true);
+
+            if (service.SkipLoadingDatabase)
+                return;
+
+            switch (serviceType)
+            {
+                case ConverterServiceType.Lot:
+                    this.LoadDatabase(service.ArchiveDirectory, serviceType);
+                    break;
+                case ConverterServiceType.Street:
+                    this.LoadDatabase(service.ExtractDirectory, serviceType);
+                    break;
+            }
+            service.EmptyDirectories(service.SkipArchivingXmlDocuments, false);
         }
 
         /// <summary>
@@ -108,129 +126,131 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
             return BaseAddressService.Create(serviceType, this._settings);
         }
 
-        ///// <summary>
-        ///// Loads extracted XML files to database.
-        ///// </summary>
-        ///// <param name="sourceDirectory">Source directory where the XML files are located.</param>
-        ///// <param name="serviceType">Converter service type.</param>
-        //private void LoadDatabase(string sourceDirectory, ConverterServiceType serviceType)
-        //{
-        //    var archiveDirectory = Directory.GetDirectories(sourceDirectory)
-        //                                    .OrderBy(p => p)
-        //                                    .Last();
-        //    using (var context = new KoreanPostcodeAddressDataContext())
-        //    {
-        //        //  Drops and recreates tables.
-        //        context.DropCreateTables(Convert.ToString(serviceType));
+        /// <summary>
+        /// Loads extracted XML files to database.
+        /// </summary>
+        /// <param name="sourceDirectory">Source directory where the XML files are located.</param>
+        /// <param name="serviceType">Converter service type.</param>
+        private void LoadDatabase(string sourceDirectory, ConverterServiceType serviceType)
+        {
+            using (var context = new KoreanPostcodeAddressDataContext())
+            {
+                //  Drops and recreates tables.
+                context.DropCreateTables(Convert.ToString(serviceType));
+            }
 
-        //        var filepaths = Directory.GetFiles(archiveDirectory).Where(p => p.EndsWith(".xml")).ToList();
-        //        switch (serviceType)
-        //        {
-        //            case ConverterServiceType.Lot:
-        //                this.LoadLotBasedAddresses(context, filepaths);
-        //                break;
-        //            case ConverterServiceType.Street:
-        //                this.LoadStreetBasedAddresses(context, filepaths);
-        //                break;
-        //        }
-        //    }
-        //}
+            IList<string> filepaths;
+            switch (serviceType)
+            {
+                case ConverterServiceType.Lot:
+                    var archiveDirectory = Directory.GetDirectories(sourceDirectory)
+                                                    .OrderBy(p => p)
+                                                    .Last();
+                    filepaths = Directory.GetFiles(archiveDirectory).Where(p => p.EndsWith(".xml")).ToList();
+                    this.LoadLotBasedAddresses(filepaths);
+                    break;
+                case ConverterServiceType.Street:
+                    filepaths = Directory.GetFiles(sourceDirectory).Where(p => p.EndsWith(".txt")).ToList();
+                    this.LoadStreetBasedAddresses(filepaths);
+                    break;
+            }
+        }
 
-        ///// <summary>
-        ///// Loads LOT-based addresses to database.
-        ///// </summary>
-        ///// <param name="context">Database context.</param>
-        ///// <param name="filepaths">List of XML document paths.</param>
-        //private void LoadLotBasedAddresses(KoreanPostcodeAddressDataContext context, IEnumerable<string> filepaths)
-        //{
-        //    var serialiser = new XmlSerializer(typeof(LotBasedAddresses));
-        //    foreach (var filepath in filepaths)
-        //    {
-        //        var segments = filepath.Split(this._settings
-        //                                          .ConversionSettings
-        //                                          .SegmentSeparatorForDirectory
-        //                                          .Delimiters
-        //                                          .ToCharArray(),
-        //                                      StringSplitOptions.RemoveEmptyEntries);
-        //        var filename = segments[segments.Length - 1];
+        /// <summary>
+        /// Loads LOT-based addresses to database.
+        /// </summary>
+        /// <param name="context">Database context.</param>
+        /// <param name="filepaths">List of XML document paths.</param>
+        private void LoadLotBasedAddresses(KoreanPostcodeAddressDataContext context, IEnumerable<string> filepaths)
+        {
+            var serialiser = new XmlSerializer(typeof(LotBasedAddresses));
+            foreach (var filepath in filepaths)
+            {
+                var segments = filepath.Split(this._settings
+                                                  .ConversionSettings
+                                                  .SegmentSeparatorForDirectory
+                                                  .Delimiters
+                                                  .ToCharArray(),
+                                              StringSplitOptions.RemoveEmptyEntries);
+                var filename = segments[segments.Length - 1];
 
-        //        this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Loading a file - {0} - to database", filename)));
+                this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Loading a file - {0} - to database", filename)));
 
-        //        using (var stream = new FileStream(filepath, FileMode.Open))
-        //        {
-        //            var collection = (LotBasedAddresses)serialiser.Deserialize(stream);
-        //            foreach (var address in collection.LotBasedAddress
-        //                                              .Select(p => new LotBasedAddress()
-        //                                              {
-        //                                                  Postcode = p.Postcode,
-        //                                                  Address = p.Address,
-        //                                                  Province = p.Province,
-        //                                                  County = p.County,
-        //                                                  Suburb = p.Suburb,
-        //                                                  Village = p.Village,
-        //                                                  Island = p.Island,
-        //                                                  San = p.San ? "산" : String.Empty,
-        //                                                  LotNumberMajorFrom = p.LotNumberMajorFrom,
-        //                                                  LotNumberMinorFrom = p.LotNumberMinorFrom,
-        //                                                  LotNumberMajorTo = p.LotNumberMajorTo,
-        //                                                  LotNumberMinorTo = p.LotNumberMinorTo,
-        //                                                  BuildingName = p.BuildingName,
-        //                                                  BuildingNumberFrom = p.BuildingNumberFrom,
-        //                                                  BuildingNumberTo = p.BuildingNumberTo
-        //                                              }))
-        //            {
-        //                context.LotBasedAddresses.AddObject(address);
-        //            }
-        //        }
-        //        context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
+                using (var stream = new FileStream(filepath, FileMode.Open))
+                {
+                    var collection = (LotBasedAddresses)serialiser.Deserialize(stream);
+                    foreach (var address in collection.LotBasedAddress
+                                                      .Select(p => new LotBasedAddress()
+                                                      {
+                                                          Postcode = p.Postcode,
+                                                          Address = p.Address,
+                                                          Province = p.Province,
+                                                          County = p.County,
+                                                          Suburb = p.Suburb,
+                                                          Village = p.Village,
+                                                          Island = p.Island,
+                                                          San = p.San ? "산" : String.Empty,
+                                                          LotNumberMajorFrom = p.LotNumberMajorFrom,
+                                                          LotNumberMinorFrom = p.LotNumberMinorFrom,
+                                                          LotNumberMajorTo = p.LotNumberMajorTo,
+                                                          LotNumberMinorTo = p.LotNumberMinorTo,
+                                                          BuildingName = p.BuildingName,
+                                                          BuildingNumberFrom = p.BuildingNumberFrom,
+                                                          BuildingNumberTo = p.BuildingNumberTo
+                                                      }))
+                    {
+                        context.LotBasedAddresses.AddObject(address);
+                    }
+                }
+                context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
 
-        //        this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Loaded the file - {0} - to database", filename)));
-        //    }
-        //}
+                this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Loaded the file - {0} - to database", filename)));
+            }
+        }
 
-        ///// <summary>
-        ///// Loads street-based addresses to database.
-        ///// </summary>
-        ///// <param name="context">Database context.</param>
-        ///// <param name="filepaths">List of XML document paths.</param>
-        //private void LoadStreetBasedAddresses(KoreanPostcodeAddressDataContext context, IEnumerable<string> filepaths)
-        //{
-        //    var serialiser = new XmlSerializer(typeof(StreetBasedAddresses));
-        //    foreach (var filepath in filepaths)
-        //    {
-        //        using (var stream = new FileStream(filepath, FileMode.Open))
-        //        {
-        //            var collection = (StreetBasedAddresses)serialiser.Deserialize(stream);
-        //            foreach (var address in collection.StreetBasedAddress
-        //                                              .Select(p => new StreetBasedAddress()
-        //                                              {
-        //                                                  Postcode = p.Postcode,
-        //                                                  Province = p.Province,
-        //                                                  ProvinceEng = p.ProvinceEng,
-        //                                                  County = p.County,
-        //                                                  CountyEng = p.CountyEng,
-        //                                                  Suburb = p.Suburb,
-        //                                                  SuburbEng = p.SuburbEng,
-        //                                                  StreetName = p.StreetName,
-        //                                                  StreetNameEng = p.StreetNameEng,
-        //                                                  Basement = p.Basement > 0,
-        //                                                  BuildingNumberMajor = p.BuildingNumberMajor,
-        //                                                  BuildingNumberMinor = p.BuildingNumberMinor,
-        //                                                  BuildingNameForBulk = p.BuildingNameForBulk,
-        //                                                  BuildingName = p.BuildingName,
-        //                                                  RegisteredSuburb = p.RegisteredSuburb,
-        //                                                  Village = p.Village,
-        //                                                  San = p.San,
-        //                                                  LotNumberMajor = p.LotNumberMajor,
-        //                                                  LotNumberMinor = p.LotNumberMinor
-        //                                              }))
-        //            {
-        //                context.StreetBasedAddresses.AddObject(address);
-        //            }
-        //        }
-        //        context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
-        //    }
-        //}
+        /// <summary>
+        /// Loads street-based addresses to database.
+        /// </summary>
+        /// <param name="context">Database context.</param>
+        /// <param name="filepaths">List of XML document paths.</param>
+        private void LoadStreetBasedAddresses(KoreanPostcodeAddressDataContext context, IEnumerable<string> filepaths)
+        {
+            var serialiser = new XmlSerializer(typeof(StreetBasedAddresses));
+            foreach (var filepath in filepaths)
+            {
+                using (var stream = new FileStream(filepath, FileMode.Open))
+                {
+                    var collection = (StreetBasedAddresses)serialiser.Deserialize(stream);
+                    foreach (var address in collection.StreetBasedAddress
+                                                      .Select(p => new StreetBasedAddress()
+                                                      {
+                                                          Postcode = p.Postcode,
+                                                          Province = p.Province,
+                                                          ProvinceEng = p.ProvinceEng,
+                                                          County = p.County,
+                                                          CountyEng = p.CountyEng,
+                                                          Suburb = p.Suburb,
+                                                          SuburbEng = p.SuburbEng,
+                                                          StreetName = p.StreetName,
+                                                          StreetNameEng = p.StreetNameEng,
+                                                          Basement = p.Basement > 0,
+                                                          BuildingNumberMajor = p.BuildingNumberMajor,
+                                                          BuildingNumberMinor = p.BuildingNumberMinor,
+                                                          BuildingNameForBulk = p.BuildingNameForBulk,
+                                                          BuildingName = p.BuildingName,
+                                                          RegisteredSuburb = p.RegisteredSuburb,
+                                                          Village = p.Village,
+                                                          San = p.San,
+                                                          LotNumberMajor = p.LotNumberMajor,
+                                                          LotNumberMinor = p.LotNumberMinor
+                                                      }))
+                    {
+                        context.StreetBasedAddresses.AddObject(address);
+                    }
+                }
+                context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
+            }
+        }
         #endregion
     }
 }

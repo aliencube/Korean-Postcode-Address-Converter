@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="KoreanPostcodeAddressDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="KoreanPostcodeAddressDataModelStoreContainer">
+          <EntitySet Name="LotBasedAddress" EntityType="KoreanPostcodeAddressDataModel.Store.LotBasedAddress" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="StreetBasedAddress" EntityType="KoreanPostcodeAddressDataModel.Store.StreetBasedAddress" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="LotBasedAddress">
+          <Key>
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Name="AddressId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Postcode" Type="nvarchar" Nullable="false" MaxLength="8" />
+          <Property Name="SequenceNumber" Type="int" Nullable="false" />
+          <Property Name="Province" Type="nvarchar" MaxLength="16" />
+          <Property Name="County" Type="nvarchar" MaxLength="16" />
+          <Property Name="District" Type="nvarchar" MaxLength="16" />
+          <Property Name="Suburb" Type="nvarchar" MaxLength="16" />
+          <Property Name="Village" Type="nvarchar" MaxLength="16" />
+          <Property Name="Island" Type="nvarchar" MaxLength="16" />
+          <Property Name="San" Type="nvarchar" MaxLength="4" />
+          <Property Name="LotNumberMajorFrom" Type="int" />
+          <Property Name="LotNumberMinorFrom" Type="int" />
+          <Property Name="LotNumberMajorTo" Type="int" />
+          <Property Name="LotNumberMinorTo" Type="int" />
+          <Property Name="BuildingName" Type="nvarchar" MaxLength="64" />
+          <Property Name="BuildingNumberFrom" Type="int" />
+          <Property Name="BuildingNumberTo" Type="int" />
+          <Property Name="DateUpdated" Type="datetime" />
+          <Property Name="Address" Type="nvarchar" MaxLength="256" />
+        </EntityType>
+        <EntityType Name="StreetBasedAddress">
+          <Key>
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Name="AddressId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Postcode" Type="nvarchar" Nullable="false" MaxLength="8" />
+          <Property Name="SequenceNumber" Type="nvarchar" Nullable="false" MaxLength="32" />
+          <Property Name="Province" Type="nvarchar" MaxLength="16" />
+          <Property Name="ProvinceEng" Type="nvarchar" MaxLength="32" />
+          <Property Name="County" Type="nvarchar" MaxLength="16" />
+          <Property Name="CountyEng" Type="nvarchar" MaxLength="32" />
+          <Property Name="District" Type="nvarchar" MaxLength="16" />
+          <Property Name="DistrictEng" Type="nvarchar" MaxLength="32" />
+          <Property Name="Suburb" Type="nvarchar" MaxLength="16" />
+          <Property Name="SuburbEng" Type="nvarchar" MaxLength="32" />
+          <Property Name="StreetNameCode" Type="nvarchar" MaxLength="32" />
+          <Property Name="StreetName" Type="nvarchar" MaxLength="16" />
+          <Property Name="StreetNameEng" Type="nvarchar" MaxLength="32" />
+          <Property Name="Basement" Type="int" />
+          <Property Name="BuildingNumberMajor" Type="int" />
+          <Property Name="BuildingNumberMinor" Type="int" />
+          <Property Name="BuildingCode" Type="nvarchar" MaxLength="32" />
+          <Property Name="BuildingNameForBulk" Type="nvarchar" MaxLength="16" />
+          <Property Name="BuildingName" Type="nvarchar" MaxLength="16" />
+          <Property Name="RegisteredSuburbCode" Type="nvarchar" MaxLength="32" />
+          <Property Name="RegisteredSuburb" Type="nvarchar" MaxLength="16" />
+          <Property Name="SuburbSequenceNumber" Type="int" />
+          <Property Name="Village" Type="nvarchar" MaxLength="16" />
+          <Property Name="San" Type="bit" />
+          <Property Name="LotNumberMajor" Type="int" />
+          <Property Name="LotNumberMinor" Type="int" />
+        </EntityType>
+        <Function Name="DropCreateTables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AddressType" Type="nvarchar" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="KoreanPostcodeAddressDataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="KoreanPostcodeAddressDataContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="LotBasedAddresses" EntityType="KoreanPostcodeAddressDataModel.LotBasedAddress" />
+          <EntitySet Name="StreetBasedAddresses" EntityType="KoreanPostcodeAddressDataModel.StreetBasedAddress" />
+          <FunctionImport Name="DropCreateTables">
+            <Parameter Name="AddressType" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="LotBasedAddress">
+          <Key>
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Type="Int32" Name="AddressId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Postcode" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
+          <Property Type="String" Name="Province" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="County" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="District" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Suburb" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Village" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Island" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="San" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="LotNumberMajorFrom" />
+          <Property Type="Int32" Name="LotNumberMinorFrom" />
+          <Property Type="Int32" Name="LotNumberMajorTo" />
+          <Property Type="Int32" Name="LotNumberMinorTo" />
+          <Property Type="String" Name="BuildingName" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="BuildingNumberFrom" />
+          <Property Type="Int32" Name="BuildingNumberTo" />
+          <Property Type="DateTime" Name="DateUpdated" />
+          <Property Type="String" Name="Address" MaxLength="256" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="StreetBasedAddress">
+          <Key>
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Type="Int32" Name="AddressId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Postcode" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="SequenceNumber" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Province" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ProvinceEng" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="County" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CountyEng" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="District" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DistrictEng" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Suburb" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="SuburbEng" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="StreetNameCode" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="StreetName" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="StreetNameEng" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Basement" />
+          <Property Type="Int32" Name="BuildingNumberMajor" />
+          <Property Type="Int32" Name="BuildingNumberMinor" />
+          <Property Type="String" Name="BuildingCode" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="BuildingNameForBulk" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="BuildingName" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RegisteredSuburbCode" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RegisteredSuburb" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="SuburbSequenceNumber" />
+          <Property Type="String" Name="Village" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="San" />
+          <Property Type="Int32" Name="LotNumberMajor" />
+          <Property Type="Int32" Name="LotNumberMinor" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="KoreanPostcodeAddressDataModelStoreContainer" CdmEntityContainer="KoreanPostcodeAddressDataContext">
+          <EntitySetMapping Name="LotBasedAddresses">
+            <EntityTypeMapping TypeName="KoreanPostcodeAddressDataModel.LotBasedAddress">
+              <MappingFragment StoreEntitySet="LotBasedAddress">
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="BuildingNumberTo" ColumnName="BuildingNumberTo" />
+                <ScalarProperty Name="BuildingNumberFrom" ColumnName="BuildingNumberFrom" />
+                <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+                <ScalarProperty Name="LotNumberMinorTo" ColumnName="LotNumberMinorTo" />
+                <ScalarProperty Name="LotNumberMajorTo" ColumnName="LotNumberMajorTo" />
+                <ScalarProperty Name="LotNumberMinorFrom" ColumnName="LotNumberMinorFrom" />
+                <ScalarProperty Name="LotNumberMajorFrom" ColumnName="LotNumberMajorFrom" />
+                <ScalarProperty Name="San" ColumnName="San" />
+                <ScalarProperty Name="Island" ColumnName="Island" />
+                <ScalarProperty Name="Village" ColumnName="Village" />
+                <ScalarProperty Name="Suburb" ColumnName="Suburb" />
+                <ScalarProperty Name="District" ColumnName="District" />
+                <ScalarProperty Name="County" ColumnName="County" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
+                <ScalarProperty Name="Postcode" ColumnName="Postcode" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StreetBasedAddresses">
+            <EntityTypeMapping TypeName="KoreanPostcodeAddressDataModel.StreetBasedAddress">
+              <MappingFragment StoreEntitySet="StreetBasedAddress">
+                <ScalarProperty Name="LotNumberMinor" ColumnName="LotNumberMinor" />
+                <ScalarProperty Name="LotNumberMajor" ColumnName="LotNumberMajor" />
+                <ScalarProperty Name="San" ColumnName="San" />
+                <ScalarProperty Name="Village" ColumnName="Village" />
+                <ScalarProperty Name="SuburbSequenceNumber" ColumnName="SuburbSequenceNumber" />
+                <ScalarProperty Name="RegisteredSuburb" ColumnName="RegisteredSuburb" />
+                <ScalarProperty Name="RegisteredSuburbCode" ColumnName="RegisteredSuburbCode" />
+                <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+                <ScalarProperty Name="BuildingNameForBulk" ColumnName="BuildingNameForBulk" />
+                <ScalarProperty Name="BuildingCode" ColumnName="BuildingCode" />
+                <ScalarProperty Name="BuildingNumberMinor" ColumnName="BuildingNumberMinor" />
+                <ScalarProperty Name="BuildingNumberMajor" ColumnName="BuildingNumberMajor" />
+                <ScalarProperty Name="Basement" ColumnName="Basement" />
+                <ScalarProperty Name="StreetNameEng" ColumnName="StreetNameEng" />
+                <ScalarProperty Name="StreetName" ColumnName="StreetName" />
+                <ScalarProperty Name="StreetNameCode" ColumnName="StreetNameCode" />
+                <ScalarProperty Name="SuburbEng" ColumnName="SuburbEng" />
+                <ScalarProperty Name="Suburb" ColumnName="Suburb" />
+                <ScalarProperty Name="DistrictEng" ColumnName="DistrictEng" />
+                <ScalarProperty Name="District" ColumnName="District" />
+                <ScalarProperty Name="CountyEng" ColumnName="CountyEng" />
+                <ScalarProperty Name="County" ColumnName="County" />
+                <ScalarProperty Name="ProvinceEng" ColumnName="ProvinceEng" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
+                <ScalarProperty Name="Postcode" ColumnName="Postcode" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="DropCreateTables" FunctionName="KoreanPostcodeAddressDataModel.Store.DropCreateTables" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="KoreanPostcodeAddressDataContext">
+        <EntityTypeShape EntityType="KoreanPostcodeAddressDataModel.LotBasedAddress" Width="2" PointX="0.75" PointY="0.75" Height="4.6725065104166656" />
+        <EntityTypeShape EntityType="KoreanPostcodeAddressDataModel.StreetBasedAddress" Width="2" PointX="3.125" PointY="0.75" Height="6.21091796875" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>
