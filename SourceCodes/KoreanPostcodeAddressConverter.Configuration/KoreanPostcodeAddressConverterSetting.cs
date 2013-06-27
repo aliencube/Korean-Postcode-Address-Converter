@@ -2,11 +2,21 @@
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
 {
-	/// <summary>
+    /// <summary>
 	/// This represents the Korean postcode-address conversion settings configuration entity.
 	/// </summary>
 	public class KoreanPostcodeAddressConverterSettings : ConfigurationSection
 	{
+        /// <summary>
+        /// Gets or sets the proxy server element.
+        /// </summary>
+        [ConfigurationProperty("proxyServer", IsRequired = true)]
+        public ProxyServerElement ProxyServer
+        {
+            get { return (ProxyServerElement)this["proxyServer"]; }
+            set { this["proxyServer"] = value; }
+        }
+
 		/// <summary>
 		/// Gets or sets the process requests element.
 		/// </summary>

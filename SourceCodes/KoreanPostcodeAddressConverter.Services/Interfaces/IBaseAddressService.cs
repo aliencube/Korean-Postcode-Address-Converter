@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
@@ -10,6 +11,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
     public interface IBaseAddressService
     {
         #region Properties
+        /// <summary>
+        /// Gets the proxy server settings element.
+        /// </summary>
+        ProxyServerElement ProxyServer { get; }
+
         /// <summary>
         /// Gets the value that specifies whether to download files from the source or not.
         /// </summary>

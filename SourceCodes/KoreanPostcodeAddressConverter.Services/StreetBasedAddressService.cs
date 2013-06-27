@@ -227,6 +227,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
             using (var client = new WebClient())
             {
+                if (this.ProxyServer.Use)
+                    client.Proxy = new WebProxy(this.ProxyServer.Host, this.ProxyServer.Port);
+
                 foreach (var filename in this.FilenamesToDownloadOrExtract)
                 {
                     this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Downloading a file - {0}", filename)));

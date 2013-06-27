@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Ionic.Zip;
+using Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Enums;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers;
@@ -33,6 +34,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// Gets the configuration settings.
         /// </summary>
         protected Settings Settings { get; private set; }
+
+        /// <summary>
+        /// Gets the proxy server settings element.
+        /// </summary>
+        public ProxyServerElement ProxyServer
+        {
+            get { return this.Settings.ConversionSettings.ProxyServer; }
+        }
 
         /// <summary>
         /// Gets the value that specifies whether to skip downloading files or not.

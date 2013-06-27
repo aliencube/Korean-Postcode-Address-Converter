@@ -47,6 +47,7 @@
     <Compile Include="KeyValuePairElement.cs" />
     <Compile Include="KeyValuePairElementCollection.cs" />
     <Compile Include="LocationMarkersElement.cs" />
+    <Compile Include="ProxyServerElement.cs" />
     <Compile Include="SegmentDelimitersElement.cs" />
     <Compile Include="DirectoryElement.cs" />
     <Compile Include="DownloadUrlElement.cs" />
