@@ -84,10 +84,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         }
 
         /// <summary>
-        /// Converts the object value to nullable integer value.
+        /// Converts the object value to integer value.
         /// </summary>
         /// <param name="value">Value to convert.</param>
-        /// <returns>Returns nullable integer value converted.</returns>
+        /// <returns>Returns the integer value converted.</returns>
         public static int ConvertToInt32(object value)
         {
             var tmp = value as String;
@@ -100,6 +100,40 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
             if (Int32.TryParse(tmp.Trim(), out ir))
                 result = ir;
 
+            return result;
+        }
+
+        /// <summary>
+        /// Converts the value to string value.
+        /// </summary>
+        /// <param name="value">Value to convert.</param>
+        /// <returns>Returns the string value converted.</returns>
+        public static string ConvertToString(object value)
+        {
+            var tmp = value as String;
+
+            return String.IsNullOrWhiteSpace(tmp) ? null : tmp.Trim();
+        }
+
+        /// <summary>
+        /// Converts the object value to DateTime value.
+        /// </summary>
+        /// <param name="value">Value to convert.</param>
+        /// <returns>Returns the DateTime value converted.</returns>
+        public static DateTime ConvertToDateTime(object value)
+        {
+            var tmp = value as String;
+            if (String.IsNullOrWhiteSpace(tmp))
+                return DateTime.MinValue;
+
+            if (!Regex.IsMatch(tmp.Trim(), @"\d{8}"))
+                return DateTime.MinValue;
+
+            var year = Convert.ToInt32(tmp.Trim().Substring(0, 4));
+            var month = Convert.ToInt32(tmp.Trim().Substring(4, 2));
+            var day = Convert.ToInt32(tmp.Trim().Substring(6, 2));
+
+            var result = new DateTime(year, month, day);
             return result;
         }
 
@@ -134,25 +168,17 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         }
 
         /// <summary>
-        /// Converts the object value to DateTime value.
+        /// Converts the object value to nullable DateTime value.
         /// </summary>
         /// <param name="value">Value to convert.</param>
-        /// <returns>Returns DateTime value.</returns>
-        public static DateTime ConvertToDateTime(object value)
+        /// <returns>Returns the nullable DateTime value converted.</returns>
+        public static DateTime? ConvertToNullableDateTime(object value)
         {
             var tmp = value as String;
             if (String.IsNullOrWhiteSpace(tmp))
-                return DateTime.MinValue;
+                return null;
 
-            if (!Regex.IsMatch(tmp.Trim(), @"\d{8}"))
-                return DateTime.MinValue;
-
-            var year = Convert.ToInt32(tmp.Trim().Substring(0, 4));
-            var month = Convert.ToInt32(tmp.Trim().Substring(4, 2));
-            var day = Convert.ToInt32(tmp.Trim().Substring(6, 2));
-
-            var result = new DateTime(year, month, day);
-            return result;
+            return ConvertToDateTime(value);
         }
         #endregion
     }

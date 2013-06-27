@@ -9,6 +9,7 @@ using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Enums;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Models;
+using Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers;
 
 namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
 {
@@ -159,52 +160,51 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         /// <summary>
         /// Loads LOT-based addresses to database.
         /// </summary>
-        /// <param name="context">Database context.</param>
         /// <param name="filepaths">List of XML document paths.</param>
-        private void LoadLotBasedAddresses(KoreanPostcodeAddressDataContext context, IEnumerable<string> filepaths)
+        private void LoadLotBasedAddresses(IEnumerable<string> filepaths)
         {
             var serialiser = new XmlSerializer(typeof(LotBasedAddresses));
             foreach (var filepath in filepaths)
             {
-                var segments = filepath.Split(this._settings
-                                                  .ConversionSettings
-                                                  .SegmentSeparatorForDirectory
-                                                  .Delimiters
-                                                  .ToCharArray(),
-                                              StringSplitOptions.RemoveEmptyEntries);
-                var filename = segments[segments.Length - 1];
+                var filename = ConversionHelper.GetFilenameFromFilepath(filepath, this._settings);
 
-                this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Loading a file - {0} - to database", filename)));
-
-                using (var stream = new FileStream(filepath, FileMode.Open))
+                using (var context = new KoreanPostcodeAddressDataContext())
                 {
-                    var collection = (LotBasedAddresses)serialiser.Deserialize(stream);
-                    foreach (var address in collection.LotBasedAddress
-                                                      .Select(p => new LotBasedAddress()
-                                                      {
-                                                          Postcode = p.Postcode,
-                                                          Address = p.Address,
-                                                          Province = p.Province,
-                                                          County = p.County,
-                                                          Suburb = p.Suburb,
-                                                          Village = p.Village,
-                                                          Island = p.Island,
-                                                          San = p.San ? "산" : String.Empty,
-                                                          LotNumberMajorFrom = p.LotNumberMajorFrom,
-                                                          LotNumberMinorFrom = p.LotNumberMinorFrom,
-                                                          LotNumberMajorTo = p.LotNumberMajorTo,
-                                                          LotNumberMinorTo = p.LotNumberMinorTo,
-                                                          BuildingName = p.BuildingName,
-                                                          BuildingNumberFrom = p.BuildingNumberFrom,
-                                                          BuildingNumberTo = p.BuildingNumberTo
-                                                      }))
-                    {
-                        context.LotBasedAddresses.AddObject(address);
-                    }
-                }
-                context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
+                    this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Loading a file - {0} - to database", filename)));
 
-                this.OnStatusChanged(new StatusChangeEventArgs(String.Format("Loaded the file - {0} - to database", filename)));
+                    using (var stream = new FileStream(filepath, FileMode.Open))
+                    {
+                        var collection = (LotBasedAddresses)serialiser.Deserialize(stream);
+                        foreach (var address in collection.LotBasedAddress
+                                                          .Select(p => new LotBasedAddress()
+                                                              {
+                                                                  Postcode = ConversionHelper.ConvertToString(p.Postcode),
+                                                                  SequenceNumber = ConversionHelper.ConvertToInt32(p.SequenceNumber),
+                                                                  Province = ConversionHelper.GetProvince(p.Province),
+                                                                  County = ConversionHelper.GetCounty(p.County),
+                                                                  District = ConversionHelper.GetDistrict(p.Province, p.County),
+                                                                  Suburb = ConversionHelper.GetSuburb(p.Suburb),
+                                                                  Village = ConversionHelper.GetVillage(p.Village),
+                                                                  Island = ConversionHelper.GetIsland(p.Island),
+                                                                  San = ConversionHelper.GetSan(p.San),
+                                                                  LotNumberMajorFrom = ConversionHelper.ConvertToNullableInt32(p.LotNumberMajorFrom),
+                                                                  LotNumberMinorFrom = ConversionHelper.ConvertToNullableInt32(p.LotNumberMinorFrom),
+                                                                  LotNumberMajorTo = ConversionHelper.ConvertToNullableInt32(p.LotNumberMajorTo),
+                                                                  LotNumberMinorTo = ConversionHelper.ConvertToNullableInt32(p.LotNumberMinorTo),
+                                                                  BuildingName = ConversionHelper.ConvertToString(p.BuildingName),
+                                                                  BuildingNumberFrom = ConversionHelper.ConvertToNullableInt32(p.BuildingNumberFrom),
+                                                                  BuildingNumberTo = ConversionHelper.ConvertToNullableInt32(p.BuildingNumberTo),
+                                                                  DateUpdated = ConversionHelper.ConvertToNullableDateTime(p.DateUpdated),
+                                                                  Address = ConversionHelper.ConvertToString(p.Address)
+                                                              }))
+                        {
+                            context.LotBasedAddresses.AddObject(address);
+                        }
+                    }
+                    context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
+
+                    this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Loaded the file - {0} - to database", filename)));
+                }
             }
         }
 
