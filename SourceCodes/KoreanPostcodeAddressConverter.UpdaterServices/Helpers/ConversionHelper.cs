@@ -22,9 +22,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
                 return null;
 
             var settings = Settings.Instance;
-            var provinceMarker = Convert.ToString(province.Trim().ToCharArray().Last());
+            var markers = settings.GetLocationMarkers("province");
+            var provinceMarker = province.Trim().ToCharArray().Last();
 
-            return settings.ProvinceMarkers.Contains(provinceMarker) ? province : null;
+            return markers.Contains(provinceMarker) ? province : null;
         }
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
         /// <returns>Returns the province in English.</returns>
         public static string GetProvinceEng(string province)
         {
-            return GetString(province);
+            return ConvertToString(province);
         }
 
         /// <summary>
@@ -49,13 +50,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
                 return null;
 
             var settings = Settings.Instance;
+            var markers = settings.GetLocationMarkers("county");
+            var provinceMarker = province.Trim().ToCharArray().Last();
 
-            //  Returns the province, if the province marker belongs to county markers, ie. metropolitan city.
-            var provinceMarker = Convert.ToString(province.Trim().ToCharArray().Last());
-            if (settings.CountyMarkers.Contains(provinceMarker))
-                return province.Trim();
-
-            return null;
+            //  Returns the province, if the province marker belongs to county markers - ie. metropolitan city.
+            return markers.Contains(provinceMarker) ? province.Trim() : null;
         }
 
         /// <summary>
@@ -80,17 +79,16 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
                 return null;
 
             var settings = Settings.Instance;
+            var markers = settings.GetLocationMarkers("county");
 
             //  Redefines the county.
             var segments = county.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
             county = segments[0];
 
-            //  Returns the county, if the county marker belongs to the county markers.
-            var countyMarker = Convert.ToString(county.Trim().ToCharArray().Last());
-            if (settings.CountyMarkers.Contains(countyMarker))
-                return county.Trim();
+            var countyMarker = county.Trim().ToCharArray().Last();
 
-            return null;
+            //  Returns the county, if the county marker belongs to the county markers.
+            return markers.Contains(countyMarker) ? county.Trim() : null;
         }
 
         /// <summary>
@@ -101,7 +99,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
         /// <returns>Returns the county in English.</returns>
         public static string GetCountyEng(string province, string county)
         {
-            return null;
+            return ConvertToString(county);
         }
 
         /// <summary>
@@ -117,22 +115,22 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
                 return null;
 
             var settings = Settings.Instance;
+            var markers = settings.GetLocationMarkers("county");
 
             //  Returns the county, if the province marker belongs to county markers, ie. metropolitan city.
-            var provinceMarker = Convert.ToString(province.Trim().ToCharArray().Last());
-            if (settings.CountyMarkers.Contains(provinceMarker))
+            var provinceMarker = province.Trim().ToCharArray().Last();
+            if (markers.Contains(provinceMarker))
                 return county.Trim();
 
             //  Defines district from county.
             var segments = county.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
             var district = segments.Length > 1 ? segments[segments.Length - 1] : segments[0];
 
-            //  Returns the district, derived from the county.
-            var districtMarker = Convert.ToString(district.Trim().ToCharArray().Last());
-            if (settings.DistrictMarkers.Contains(districtMarker))
-                return district;
+            markers = settings.GetLocationMarkers("district");
+            var districtMarker = district.Trim().ToCharArray().Last();
 
-            return null;
+            //  Returns the district, derived from the county, if the district marker belongs to the district markers.
+            return markers.Contains(districtMarker) ? district.Trim() : null;
         }
 
         /// <summary>
@@ -157,9 +155,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
                 return null;
 
             var settings = Settings.Instance;
-            var suburbMarker = Convert.ToString(suburb.Trim().ToCharArray().Last());
+            var markers = settings.GetLocationMarkers("suburb");
+            var suburbMarker = suburb.Trim().ToCharArray().Last();
 
-            return settings.SuburbMarkers.Contains(suburbMarker) ? RemoveDigits(suburb) : null;
+            //  Returns the suburb, if the suburb marker belongs to the suburb markers.
+            return markers.Contains(suburbMarker) ? suburb.Trim() : null;
         }
 
         /// <summary>
@@ -169,26 +169,30 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
         /// <returns>Returns the suburb.</returns>
         public static string GetSuburbEng(string suburb)
         {
-            return GetString(suburb);
+            return ConvertToString(suburb);
         }
 
         /// <summary>
         /// Gets the village.
         /// </summary>
         /// <param name="village">Village field data.</param>
+        /// <param name="removeParenthesis">Value that specifies whether to remove parenthesis value or not. Default value is <c>True</c>.</param>
         /// <returns>Returns the village.</returns>
-        public static string GetVillage(string village)
+        public static string GetVillage(string village, bool removeParenthesis = true)
         {
             if (String.IsNullOrWhiteSpace(village))
                 return null;
 
             //  Removes parenthesis value.
-            village = Regex.Replace(village, @"\(.+\)", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            if (removeParenthesis)
+                village = Regex.Replace(village, @"\(.+\)", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             var settings = Settings.Instance;
-            var villageMarker = Convert.ToString(village.Trim().ToCharArray().Last());
+            var markers = settings.GetLocationMarkers("village");
+            var villageMarker = village.Trim().ToCharArray().Last();
 
-            return settings.VillageMarkers.Contains(villageMarker) ? RemoveDigits(village) : null;
+            //  Returns the village, if the village marker belongs to the village markers.
+            return markers.Contains(villageMarker) ? village.Trim() : null;
         }
 
         /// <summary>
@@ -202,9 +206,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
                 return null;
 
             var settings = Settings.Instance;
-            var islandMarker = Convert.ToString(island.Trim().ToCharArray().Last());
+            var markers = settings.GetLocationMarkers("islane");
+            var islandMarker = island.Trim().ToCharArray().Last();
 
-            return settings.IslandMarkers.Contains(islandMarker) ? island : null;
+            //  Returns the island, if the island marker belongs to the island markers.
+            return markers.Contains(islandMarker) ? island.Trim() : null;
         }
 
         /// <summary>
@@ -229,11 +235,13 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
                 return null;
 
             var settings = Settings.Instance;
-            var streetMarker = Convert.ToString(street.Trim().ToCharArray().Last());
+            var markers = settings.GetLocationMarkers("street");
+            var streetMarker = street.Trim().ToCharArray().Last();
 
-            return settings.StreetMarkers.Contains(streetMarker)
-                       ? RemoveDigits(street)
-                       : (streetMarker == "0" ? GetStreetCorrected(streetEng.Trim()) : null);
+            //  Returns the street name, if the street name marker belongs to the street names marker.
+            return markers.Contains(streetMarker)
+                       ? street.Trim()
+                       : (streetMarker == '0' ? GetStreetCorrected(streetEng.Trim()) : null);
         }
 
         /// <summary>
@@ -243,7 +251,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
         /// <returns>Returns the street in English.</returns>
         public static string GetStreetEng(string street)
         {
-            return GetString(street);
+            return ConvertToString(street);
         }
 
         /// <summary>
@@ -257,23 +265,6 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
             return settings.StreetNameCorrections.ContainsKey(streetEng)
                        ? settings.StreetNameCorrections[streetEng]
                        : null;
-        }
-
-        /// <summary>
-        /// Removes digits from the locality value.
-        /// </summary>
-        /// <param name="value">Locality value.</param>
-        /// <returns>Returns the locality value that digits are removed.</returns>
-        private static string RemoveDigits(string value)
-        {
-            if (String.IsNullOrWhiteSpace(value))
-                return null;
-
-            var pattern = @"^([^d]+)\d+([^\d]+)$";
-            var replacement = "$1$2";
-
-            var result = Regex.Replace(value, pattern, replacement, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            return result;
         }
     }
 }

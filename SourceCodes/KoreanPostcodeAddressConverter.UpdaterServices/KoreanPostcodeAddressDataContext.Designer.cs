@@ -281,6 +281,30 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
+        public global::System.String City
+        {
+            get
+            {
+                return _City;
+            }
+            set
+            {
+                OnCityChanging(value);
+                ReportPropertyChanging("City");
+                _City = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("City");
+                OnCityChanged();
+            }
+        }
+        private global::System.String _City;
+        partial void OnCityChanging(global::System.String value);
+        partial void OnCityChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
         public global::System.String County
         {
             get
@@ -792,6 +816,54 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         private global::System.String _ProvinceEng;
         partial void OnProvinceEngChanging(global::System.String value);
         partial void OnProvinceEngChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String City
+        {
+            get
+            {
+                return _City;
+            }
+            set
+            {
+                OnCityChanging(value);
+                ReportPropertyChanging("City");
+                _City = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("City");
+                OnCityChanged();
+            }
+        }
+        private global::System.String _City;
+        partial void OnCityChanging(global::System.String value);
+        partial void OnCityChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String CityEng
+        {
+            get
+            {
+                return _CityEng;
+            }
+            set
+            {
+                OnCityEngChanging(value);
+                ReportPropertyChanging("CityEng");
+                _CityEng = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("CityEng");
+                OnCityEngChanged();
+            }
+        }
+        private global::System.String _CityEng;
+        partial void OnCityEngChanging(global::System.String value);
+        partial void OnCityEngChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

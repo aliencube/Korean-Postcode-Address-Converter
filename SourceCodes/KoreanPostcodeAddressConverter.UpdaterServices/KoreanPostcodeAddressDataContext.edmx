@@ -17,6 +17,7 @@
           <Property Name="Postcode" Type="nvarchar" Nullable="false" MaxLength="8" />
           <Property Name="SequenceNumber" Type="int" Nullable="false" />
           <Property Name="Province" Type="nvarchar" MaxLength="16" />
+          <Property Name="City" Type="nvarchar" MaxLength="16" />
           <Property Name="County" Type="nvarchar" MaxLength="16" />
           <Property Name="District" Type="nvarchar" MaxLength="16" />
           <Property Name="Suburb" Type="nvarchar" MaxLength="16" />
@@ -42,6 +43,8 @@
           <Property Name="SequenceNumber" Type="nvarchar" Nullable="false" MaxLength="32" />
           <Property Name="Province" Type="nvarchar" MaxLength="16" />
           <Property Name="ProvinceEng" Type="nvarchar" MaxLength="32" />
+          <Property Name="City" Type="nvarchar" MaxLength="16" />
+          <Property Name="CityEng" Type="nvarchar" MaxLength="32" />
           <Property Name="County" Type="nvarchar" MaxLength="16" />
           <Property Name="CountyEng" Type="nvarchar" MaxLength="32" />
           <Property Name="District" Type="nvarchar" MaxLength="16" />
@@ -87,6 +90,7 @@
           <Property Type="String" Name="Postcode" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
           <Property Type="String" Name="Province" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="City" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="County" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="District" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Suburb" MaxLength="16" FixedLength="false" Unicode="true" />
@@ -112,6 +116,8 @@
           <Property Type="String" Name="SequenceNumber" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Province" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="ProvinceEng" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="City" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CityEng" MaxLength="32" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="County" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="CountyEng" MaxLength="32" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="District" MaxLength="16" FixedLength="false" Unicode="true" />
@@ -159,6 +165,7 @@
                 <ScalarProperty Name="Suburb" ColumnName="Suburb" />
                 <ScalarProperty Name="District" ColumnName="District" />
                 <ScalarProperty Name="County" ColumnName="County" />
+                <ScalarProperty Name="City" ColumnName="City" />
                 <ScalarProperty Name="Province" ColumnName="Province" />
                 <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
                 <ScalarProperty Name="Postcode" ColumnName="Postcode" />
@@ -191,6 +198,8 @@
                 <ScalarProperty Name="District" ColumnName="District" />
                 <ScalarProperty Name="CountyEng" ColumnName="CountyEng" />
                 <ScalarProperty Name="County" ColumnName="County" />
+                <ScalarProperty Name="CityEng" ColumnName="CityEng" />
+                <ScalarProperty Name="City" ColumnName="City" />
                 <ScalarProperty Name="ProvinceEng" ColumnName="ProvinceEng" />
                 <ScalarProperty Name="Province" ColumnName="Province" />
                 <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
@@ -221,8 +230,8 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="KoreanPostcodeAddressDataContext">
-        <EntityTypeShape EntityType="KoreanPostcodeAddressDataModel.LotBasedAddress" Width="2" PointX="0.75" PointY="0.75" Height="4.6725065104166656" />
-        <EntityTypeShape EntityType="KoreanPostcodeAddressDataModel.StreetBasedAddress" Width="2" PointX="3.125" PointY="0.75" Height="6.21091796875" />
+        <EntityTypeShape EntityType="KoreanPostcodeAddressDataModel.LotBasedAddress" Width="2" PointX="0.75" PointY="0.75" Height="4.8648079427083335" />
+        <EntityTypeShape EntityType="KoreanPostcodeAddressDataModel.StreetBasedAddress" Width="2" PointX="3.25" PointY="0.75" Height="6.5955208333333335" />
       </Diagram>
     </Diagrams>
   </Designer>

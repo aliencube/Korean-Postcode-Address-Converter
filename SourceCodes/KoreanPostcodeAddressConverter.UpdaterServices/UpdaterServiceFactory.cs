@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data.Objects;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Serialization;
+using FileHelpers;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Enums;
 using Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Events;
@@ -181,6 +183,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
                                                                   Postcode = ConversionHelper.ConvertToString(p.Postcode),
                                                                   SequenceNumber = ConversionHelper.ConvertToInt32(p.SequenceNumber),
                                                                   Province = ConversionHelper.GetProvince(p.Province),
+                                                                  City = ConversionHelper.GetCity(p.Province),
                                                                   County = ConversionHelper.GetCounty(p.County),
                                                                   District = ConversionHelper.GetDistrict(p.Province, p.County),
                                                                   Suburb = ConversionHelper.GetSuburb(p.Suburb),
@@ -211,44 +214,69 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
         /// <summary>
         /// Loads street-based addresses to database.
         /// </summary>
-        /// <param name="context">Database context.</param>
         /// <param name="filepaths">List of XML document paths.</param>
-        private void LoadStreetBasedAddresses(KoreanPostcodeAddressDataContext context, IEnumerable<string> filepaths)
+        private void LoadStreetBasedAddresses(IEnumerable<string> filepaths)
         {
-            var serialiser = new XmlSerializer(typeof(StreetBasedAddresses));
             foreach (var filepath in filepaths)
             {
-                using (var stream = new FileStream(filepath, FileMode.Open))
+                var filename = ConversionHelper.GetFilenameFromFilepath(filepath, this._settings);
+
+                using (var context = new KoreanPostcodeAddressDataContext())
                 {
-                    var collection = (StreetBasedAddresses)serialiser.Deserialize(stream);
-                    foreach (var address in collection.StreetBasedAddress
-                                                      .Select(p => new StreetBasedAddress()
-                                                      {
-                                                          Postcode = p.Postcode,
-                                                          Province = p.Province,
-                                                          ProvinceEng = p.ProvinceEng,
-                                                          County = p.County,
-                                                          CountyEng = p.CountyEng,
-                                                          Suburb = p.Suburb,
-                                                          SuburbEng = p.SuburbEng,
-                                                          StreetName = p.StreetName,
-                                                          StreetNameEng = p.StreetNameEng,
-                                                          Basement = p.Basement > 0,
-                                                          BuildingNumberMajor = p.BuildingNumberMajor,
-                                                          BuildingNumberMinor = p.BuildingNumberMinor,
-                                                          BuildingNameForBulk = p.BuildingNameForBulk,
-                                                          BuildingName = p.BuildingName,
-                                                          RegisteredSuburb = p.RegisteredSuburb,
-                                                          Village = p.Village,
-                                                          San = p.San,
-                                                          LotNumberMajor = p.LotNumberMajor,
-                                                          LotNumberMinor = p.LotNumberMinor
-                                                      }))
+                    this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Loading a file - {0} - to database", filename)));
+
+                    var csv = new DelimitedFileEngine<Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Models.StreetBasedAddress>() { Encoding = Encoding.GetEncoding(949) };
+                    csv.Options.Delimiter = "|";
+                    csv.Options.IgnoreFirstLines = 1;
+
+                    //  Loads objects directly from the CSV file.
+                    var addresses = csv.ReadFile(filepath);
+
+                    var blockSize = this._settings.GetProcessRequests<int>("databaseLoadingBlockSize");
+                    var block = (int) Math.Ceiling((double) addresses.Length/blockSize);
+                    for (var i = 0; i < block; i++)
                     {
-                        context.StreetBasedAddresses.AddObject(address);
+                        this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Loading a file - {0} - to database ({1}/{2})", filename, i + 1, block)));
+
+                        var records = i < block - 2
+                                          ? blockSize
+                                          : addresses.Length - (i * block);
+                        foreach (var address in addresses.Skip(i * (int)blockSize)
+                                                         .Take((int)records)
+                                                         .Select(p => new StreetBasedAddress()
+                                                         {
+                                                             Postcode = ConversionHelper.ConvertToString(p.Postcode),
+                                                             Province = ConversionHelper.GetProvince(p.Province),
+                                                             ProvinceEng = ConversionHelper.GetProvinceEng(p.ProvinceEng),
+                                                             City = ConversionHelper.GetCity(p.Province),
+                                                             CityEng = ConversionHelper.GetCityEng(p.ProvinceEng),
+                                                             County = ConversionHelper.GetCounty(p.County),
+                                                             CountyEng = ConversionHelper.GetCountyEng(p.ProvinceEng, p.CountyEng),
+                                                             District = ConversionHelper.GetDistrict(p.Province, p.County),
+                                                             DistrictEng = ConversionHelper.GetDistrictEng(p.ProvinceEng, p.CountyEng),
+                                                             Suburb = ConversionHelper.GetSuburb(p.Suburb),
+                                                             SuburbEng = ConversionHelper.GetSuburbEng(p.SuburbEng),
+                                                             StreetName = ConversionHelper.GetStreet(p.StreetName, p.StreetNameEng),
+                                                             StreetNameEng = ConversionHelper.GetStreetEng(p.StreetNameEng),
+                                                             Basement = ConversionHelper.ConvertToNullableInt32(p.Basement),
+                                                             BuildingNumberMajor = ConversionHelper.ConvertToNullableInt32(p.BuildingNumberMajor),
+                                                             BuildingNumberMinor = ConversionHelper.ConvertToNullableInt32(p.BuildingNumberMinor),
+                                                             BuildingNameForBulk = ConversionHelper.ConvertToString(p.BuildingNameForBulk),
+                                                             BuildingName = ConversionHelper.ConvertToString(p.BuildingName),
+                                                             RegisteredSuburb = ConversionHelper.GetSuburb(p.RegisteredSuburb),
+                                                             Village = ConversionHelper.GetVillage(p.Village),
+                                                             San = ConversionHelper.ConvertToNullableBoolean(p.San),
+                                                             LotNumberMajor = ConversionHelper.ConvertToNullableInt32(p.LotNumberMajor),
+                                                             LotNumberMinor = ConversionHelper.ConvertToNullableInt32(p.LotNumberMinor)
+                                                         }))
+                        {
+                            context.StreetBasedAddresses.AddObject(address);
+                        }
+                        context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
+
+                        this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Loaded the file - {0} - to database ({1}/{2})", filename, i + 1, block)));
                     }
                 }
-                context.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
             }
         }
         #endregion
