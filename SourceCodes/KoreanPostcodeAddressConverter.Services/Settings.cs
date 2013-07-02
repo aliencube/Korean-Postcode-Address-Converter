@@ -61,7 +61,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             get
             {
                 if (String.IsNullOrWhiteSpace(this._unzipPath))
-                    this._unzipPath = this._conversionSettings.UnzipPath.Filepath;
+                    this._unzipPath = this.ConversionSettings.UnzipPath.Filepath;
                 return this._unzipPath;
             }
         }
@@ -75,7 +75,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             get
             {
                 if (this._streetNameCorrections == null || !this._streetNameCorrections.Any())
-                    this._streetNameCorrections = this._conversionSettings
+                    this._streetNameCorrections = this.ConversionSettings
                                                       .LocationMarkers
                                                       .StreetNameCorrections
                                                       .Cast<KeyValuePairElement>()
@@ -94,7 +94,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <returns>Returns the value to process requests.</returns>
         public T GetProcessRequests<T>(string key)
         {
-            var instance = this._conversionSettings.ProcessRequests;
+            var instance = this.ConversionSettings.ProcessRequests;
             var pi = instance.GetType()
                              .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
             var value = (T)pi.GetValue(instance, null);
@@ -109,7 +109,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <returns>Returns the list of delimiters.</returns>
         public char[] GetDelimiters(string key)
         {
-            var instance = this._conversionSettings.SegmentDelimiters;
+            var instance = this.ConversionSettings.SegmentDelimiters;
             var pi = instance.GetType()
                              .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
             var value = (string)pi.GetValue(instance, null);
@@ -128,11 +128,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <returns>Returns the list of location markers.</returns>
         public char[] GetLocationMarkers(string key)
         {
-            var pi = this._conversionSettings
-                         .LocationMarkers
-                         .GetType()
-                         .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-            var value = (string)pi.GetValue(this, null);
+            var instance = this.ConversionSettings.LocationMarkers;
+            var pi = instance.GetType()
+                             .GetProperty(key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var value = (string)pi.GetValue(instance, null);
 
             if (String.IsNullOrWhiteSpace(value))
                 return null;
