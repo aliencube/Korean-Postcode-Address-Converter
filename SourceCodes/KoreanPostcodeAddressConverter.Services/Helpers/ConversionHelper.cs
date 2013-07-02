@@ -45,7 +45,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns string value removed all white spaces except space characters.</returns>
         public static string SanitiseWhiteSpaces(object value)
         {
-            var tmp = value as String;
+            var tmp = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(tmp))
                 return null;
 
@@ -64,7 +64,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns <c>True</c>, if the value corresponds to <c>True</c>; otherwise returns <c>False</c>.</returns>
         public static bool ConvertToBoolean(object value)
         {
-            var tmp = value as String;
+            var tmp = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(tmp))
                 return false;
 
@@ -90,7 +90,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns the integer value converted.</returns>
         public static int ConvertToInt32(object value)
         {
-            var tmp = value as String;
+            var tmp = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(tmp))
                 return Int32.MinValue;
 
@@ -110,7 +110,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns the string value converted.</returns>
         public static string ConvertToString(object value)
         {
-            var tmp = value as String;
+            var tmp = Convert.ToString(value);
 
             return String.IsNullOrWhiteSpace(tmp) ? null : tmp.Trim();
         }
@@ -122,7 +122,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns the DateTime value converted.</returns>
         public static DateTime ConvertToDateTime(object value)
         {
-            var tmp = value as String;
+            var tmp = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(tmp))
                 return DateTime.MinValue;
 
@@ -144,7 +144,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns NULL, if the value is NULL, returns <c>True</c>, if the value corresponds to <c>True</c>; otherwise returns <c>False</c>.</returns>
         public static bool? ConvertToNullableBoolean(object value)
         {
-            var tmp = value as String;
+            var tmp = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(tmp))
                 return null;
 
@@ -158,7 +158,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns nullable integer value converted.</returns>
         public static int? ConvertToNullableInt32(object value)
         {
-            var tmp = value as String;
+            var tmp = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(tmp))
                 return null;
 
@@ -174,7 +174,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Helpers
         /// <returns>Returns the nullable DateTime value converted.</returns>
         public static DateTime? ConvertToNullableDateTime(object value)
         {
-            var tmp = value as String;
+            var tmp = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(tmp))
                 return null;
 

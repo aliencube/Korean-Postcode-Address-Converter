@@ -64,6 +64,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Documents\Properties\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Helpers\ConversionHelper.cs" />
     <Compile Include="KoreanPostcodeAddressDataContext.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -84,6 +84,34 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
             if (handler != null)
                 handler(sender, e);
         }
+
+        /// <summary>
+        /// Called in read operations just after the record was created from a record string.
+        /// </summary>
+        /// <param name="engine">The engine that generates the event.</param>
+        /// <param name="e">The event data.</param>
+        private void Csv_AfterReadRecord(EngineBase engine, AfterReadRecordEventArgs<Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Models.StreetBasedAddress> e)
+        {
+            var street = e.Record.StreetName.Trim();
+            var streetEng = e.Record.StreetNameEng.Trim();
+
+            if (String.IsNullOrWhiteSpace(street))
+                return;
+
+            if (street == "0" && this._settings.StreetNameCorrections.ContainsKey(streetEng))
+                street = this._settings.StreetNameCorrections[streetEng];
+            else
+            {
+                foreach (var correction in this._settings
+                                               .StreetNameCorrections
+                                               .Where(p => street.StartsWith(p.Key)))
+                {
+                    street = street.Replace(correction.Key, correction.Value);
+                }
+            }
+
+            e.Record.StreetName = street;
+        }
         #endregion
 
         #region Methods
@@ -184,7 +212,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
                                                                   SequenceNumber = ConversionHelper.ConvertToInt32(p.SequenceNumber),
                                                                   Province = ConversionHelper.GetProvince(p.Province),
                                                                   City = ConversionHelper.GetCity(p.Province),
-                                                                  County = ConversionHelper.GetCounty(p.County),
+                                                                  County = ConversionHelper.GetCounty(p.Province, p.County),
                                                                   District = ConversionHelper.GetDistrict(p.Province, p.County),
                                                                   Suburb = ConversionHelper.GetSuburb(p.Suburb),
                                                                   Village = ConversionHelper.GetVillage(p.Village),
@@ -197,7 +225,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
                                                                   BuildingName = ConversionHelper.ConvertToString(p.BuildingName),
                                                                   BuildingNumberFrom = ConversionHelper.ConvertToNullableInt32(p.BuildingNumberFrom),
                                                                   BuildingNumberTo = ConversionHelper.ConvertToNullableInt32(p.BuildingNumberTo),
-                                                                  DateUpdated = ConversionHelper.ConvertToNullableDateTime(p.DateUpdated),
+                                                                  DateUpdated = p.DateUpdated,
                                                                   Address = ConversionHelper.ConvertToString(p.Address)
                                                               }))
                         {
@@ -226,6 +254,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
                     this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Loading a file - {0} - to database", filename)));
 
                     var csv = new DelimitedFileEngine<Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Models.StreetBasedAddress>() { Encoding = Encoding.GetEncoding(949) };
+                    csv.AfterReadRecord += Csv_AfterReadRecord;
                     csv.Options.Delimiter = "|";
                     csv.Options.IgnoreFirstLines = 1;
 
@@ -246,24 +275,29 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
                                                          .Select(p => new StreetBasedAddress()
                                                          {
                                                              Postcode = ConversionHelper.ConvertToString(p.Postcode),
+                                                             SequenceNumber = ConversionHelper.ConvertToString(p.SequenceNumber),
                                                              Province = ConversionHelper.GetProvince(p.Province),
                                                              ProvinceEng = ConversionHelper.GetProvinceEng(p.ProvinceEng),
                                                              City = ConversionHelper.GetCity(p.Province),
                                                              CityEng = ConversionHelper.GetCityEng(p.ProvinceEng),
-                                                             County = ConversionHelper.GetCounty(p.County),
+                                                             County = ConversionHelper.GetCounty(p.Province, p.County),
                                                              CountyEng = ConversionHelper.GetCountyEng(p.ProvinceEng, p.CountyEng),
                                                              District = ConversionHelper.GetDistrict(p.Province, p.County),
                                                              DistrictEng = ConversionHelper.GetDistrictEng(p.ProvinceEng, p.CountyEng),
                                                              Suburb = ConversionHelper.GetSuburb(p.Suburb),
                                                              SuburbEng = ConversionHelper.GetSuburbEng(p.SuburbEng),
+                                                             StreetNameCode = ConversionHelper.ConvertToString(p.StreetNameCode),
                                                              StreetName = ConversionHelper.GetStreet(p.StreetName, p.StreetNameEng),
                                                              StreetNameEng = ConversionHelper.GetStreetEng(p.StreetNameEng),
                                                              Basement = ConversionHelper.ConvertToNullableInt32(p.Basement),
                                                              BuildingNumberMajor = ConversionHelper.ConvertToNullableInt32(p.BuildingNumberMajor),
                                                              BuildingNumberMinor = ConversionHelper.ConvertToNullableInt32(p.BuildingNumberMinor),
+                                                             BuildingCode = ConversionHelper.ConvertToString(p.BuildingCode),
                                                              BuildingNameForBulk = ConversionHelper.ConvertToString(p.BuildingNameForBulk),
                                                              BuildingName = ConversionHelper.ConvertToString(p.BuildingName),
+                                                             RegisteredSuburbCode = ConversionHelper.ConvertToString(p.RegisteredSuburbCode),
                                                              RegisteredSuburb = ConversionHelper.GetSuburb(p.RegisteredSuburb),
+                                                             SuburbSequenceNumber = ConversionHelper.ConvertToNullableInt32(p.SuburbSequenceNumber),
                                                              Village = ConversionHelper.GetVillage(p.Village),
                                                              San = ConversionHelper.ConvertToNullableBoolean(p.San),
                                                              LotNumberMajor = ConversionHelper.ConvertToNullableInt32(p.LotNumberMajor),

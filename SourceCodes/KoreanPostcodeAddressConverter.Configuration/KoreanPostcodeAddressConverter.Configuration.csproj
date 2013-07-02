@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Documents\Properties\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="FilepathElement.cs" />
     <Compile Include="KeyValuePairElement.cs" />
     <Compile Include="KeyValuePairElementCollection.cs" />

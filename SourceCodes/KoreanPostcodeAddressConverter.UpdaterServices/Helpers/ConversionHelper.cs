@@ -70,9 +70,10 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
         /// <summary>
         /// Gets the county.
         /// </summary>
+        /// <param name="province">Province field data.</param>
         /// <param name="county">County field data.</param>
         /// <returns>Returns the county.</returns>
-        public static string GetCounty(string county)
+        public static string GetCounty(string province, string county)
         {
             //  Returns province, if county is empty.
             if (String.IsNullOrWhiteSpace(county))
@@ -80,6 +81,11 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
 
             var settings = Settings.Instance;
             var markers = settings.GetLocationMarkers("county");
+
+            //  Returns NULL, if the province marker belongs to county markers, ie. metropolitan city.
+            var provinceMarker = province.Trim().ToCharArray().Last();
+            if (markers.Contains(provinceMarker))
+                return null;
 
             //  Redefines the county.
             var segments = county.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
@@ -206,7 +212,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
                 return null;
 
             var settings = Settings.Instance;
-            var markers = settings.GetLocationMarkers("islane");
+            var markers = settings.GetLocationMarkers("island");
             var islandMarker = island.Trim().ToCharArray().Last();
 
             //  Returns the island, if the island marker belongs to the island markers.

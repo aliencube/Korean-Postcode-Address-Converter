@@ -52,14 +52,14 @@
           <Property Name="Suburb" Type="nvarchar" MaxLength="16" />
           <Property Name="SuburbEng" Type="nvarchar" MaxLength="32" />
           <Property Name="StreetNameCode" Type="nvarchar" MaxLength="32" />
-          <Property Name="StreetName" Type="nvarchar" MaxLength="16" />
-          <Property Name="StreetNameEng" Type="nvarchar" MaxLength="32" />
+          <Property Name="StreetName" Type="nvarchar" MaxLength="256" />
+          <Property Name="StreetNameEng" Type="nvarchar" MaxLength="256" />
           <Property Name="Basement" Type="int" />
           <Property Name="BuildingNumberMajor" Type="int" />
           <Property Name="BuildingNumberMinor" Type="int" />
           <Property Name="BuildingCode" Type="nvarchar" MaxLength="32" />
-          <Property Name="BuildingNameForBulk" Type="nvarchar" MaxLength="16" />
-          <Property Name="BuildingName" Type="nvarchar" MaxLength="16" />
+          <Property Name="BuildingNameForBulk" Type="nvarchar" MaxLength="64" />
+          <Property Name="BuildingName" Type="nvarchar" MaxLength="64" />
           <Property Name="RegisteredSuburbCode" Type="nvarchar" MaxLength="32" />
           <Property Name="RegisteredSuburb" Type="nvarchar" MaxLength="16" />
           <Property Name="SuburbSequenceNumber" Type="int" />
@@ -125,14 +125,14 @@
           <Property Type="String" Name="Suburb" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="SuburbEng" MaxLength="32" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="StreetNameCode" MaxLength="32" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="StreetName" MaxLength="16" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="StreetNameEng" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="StreetName" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="StreetNameEng" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Basement" />
           <Property Type="Int32" Name="BuildingNumberMajor" />
           <Property Type="Int32" Name="BuildingNumberMinor" />
           <Property Type="String" Name="BuildingCode" MaxLength="32" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="BuildingNameForBulk" MaxLength="16" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="BuildingName" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="BuildingNameForBulk" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="BuildingName" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="RegisteredSuburbCode" MaxLength="32" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="RegisteredSuburb" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="SuburbSequenceNumber" />

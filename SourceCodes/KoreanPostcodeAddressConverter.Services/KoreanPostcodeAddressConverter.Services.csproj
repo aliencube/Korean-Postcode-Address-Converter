@@ -60,6 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Documents\Properties\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Enums\ConverterServiceType.cs" />
     <Compile Include="Events\ExceptionThrownEventArgs.cs" />
     <Compile Include="Events\StatusChangedEventArgs.cs" />
@@ -87,15 +90,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="xsd-help.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\KoreanPostcodeAddressConverter.Configuration\KoreanPostcodeAddressConverter.Configuration.csproj">
       <Project>{DFA22695-BCB2-4EB2-9622-4E8AF93D7F62}</Project>
       <Name>KoreanPostcodeAddressConverter.Configuration</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="xsd-help.txt" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

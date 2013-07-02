@@ -196,6 +196,34 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
                                          new StatusProgress(filename));
             }
         }
+
+        /// <summary>
+        /// Called in read operations just after the record was created from a record string.
+        /// </summary>
+        /// <param name="engine">The engine that generates the event.</param>
+        /// <param name="e">The event data.</param>
+        private void Csv_AfterReadRecord(EngineBase engine, AfterReadRecordEventArgs<StreetBasedAddress> e)
+        {
+            var street = e.Record.StreetName.Trim();
+            var streetEng = e.Record.StreetNameEng.Trim();
+
+            if (String.IsNullOrWhiteSpace(street))
+                return;
+
+            if (street == "0" && this.Settings.StreetNameCorrections.ContainsKey(streetEng))
+                street = this.Settings.StreetNameCorrections[streetEng];
+            else
+            {
+                foreach (var correction in this.Settings
+                                               .StreetNameCorrections
+                                               .Where(p => street.StartsWith(p.Key)))
+                {
+                    street = street.Replace(correction.Key, correction.Value);
+                }
+            }
+
+            e.Record.StreetName = street;
+        }
         #endregion
 
         #region Methods
@@ -315,6 +343,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             }
 
             var csv = new DelimitedFileEngine<StreetBasedAddress>() { Encoding = Encoding.GetEncoding(949) };
+            csv.AfterReadRecord += Csv_AfterReadRecord;
             csv.Options.Delimiter = "|";
             csv.Options.IgnoreFirstLines = 1;
 

@@ -36,6 +36,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
             this._settings = Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Settings.Instance;
 
             this._source = ConfigurationManager.AppSettings["Test.DownloadSourceDirectory"];
+            if (!Directory.Exists(this._source))
+                Directory.CreateDirectory(this._source);
 
             this._downloads = ConfigurationManager.AppSettings["Test.DownloadDirectory"];
             if (!Directory.Exists(this._downloads))
