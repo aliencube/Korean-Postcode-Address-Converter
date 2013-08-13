@@ -23,7 +23,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
 
             var settings = Settings.Instance;
             var markers = settings.GetLocationMarkers("province");
-            var provinceMarker = province.Trim().ToCharArray().Last();
+            var provinceMarker = Convert.ToString(province.Trim().ToCharArray().Last());
 
             return markers.Contains(provinceMarker) ? province : null;
         }
@@ -51,7 +51,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
 
             var settings = Settings.Instance;
             var markers = settings.GetLocationMarkers("county");
-            var provinceMarker = province.Trim().ToCharArray().Last();
+            var provinceMarker = Convert.ToString(province.Trim().ToCharArray().Last());
 
             //  Returns the province, if the province marker belongs to county markers - ie. metropolitan city.
             return markers.Contains(provinceMarker) ? province.Trim() : null;
@@ -83,7 +83,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
             var markers = settings.GetLocationMarkers("county");
 
             //  Returns NULL, if the province marker belongs to county markers, ie. metropolitan city.
-            var provinceMarker = province.Trim().ToCharArray().Last();
+            var provinceMarker = Convert.ToString(province.Trim().ToCharArray().Last());
             if (markers.Contains(provinceMarker))
                 return null;
 
@@ -91,7 +91,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
             var segments = county.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
             county = segments[0];
 
-            var countyMarker = county.Trim().ToCharArray().Last();
+            var countyMarker = Convert.ToString(county.Trim().ToCharArray().Last());
 
             //  Returns the county, if the county marker belongs to the county markers.
             return markers.Contains(countyMarker) ? county.Trim() : null;
@@ -124,7 +124,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
             var markers = settings.GetLocationMarkers("county");
 
             //  Returns the county, if the province marker belongs to county markers, ie. metropolitan city.
-            var provinceMarker = province.Trim().ToCharArray().Last();
+            var provinceMarker = Convert.ToString(province.Trim().ToCharArray().Last());
             if (markers.Contains(provinceMarker))
                 return county.Trim();
 
@@ -133,7 +133,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
             var district = segments.Length > 1 ? segments[segments.Length - 1] : segments[0];
 
             markers = settings.GetLocationMarkers("district");
-            var districtMarker = district.Trim().ToCharArray().Last();
+            var districtMarker = Convert.ToString(district.Trim().ToCharArray().Last());
 
             //  Returns the district, derived from the county, if the district marker belongs to the district markers.
             return markers.Contains(districtMarker) ? district.Trim() : null;
@@ -162,7 +162,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
 
             var settings = Settings.Instance;
             var markers = settings.GetLocationMarkers("suburb");
-            var suburbMarker = suburb.Trim().ToCharArray().Last();
+            var suburbMarker = Convert.ToString(suburb.Trim().ToCharArray().Last());
 
             //  Returns the suburb, if the suburb marker belongs to the suburb markers.
             return markers.Contains(suburbMarker) ? suburb.Trim() : null;
@@ -195,7 +195,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
 
             var settings = Settings.Instance;
             var markers = settings.GetLocationMarkers("village");
-            var villageMarker = village.Trim().ToCharArray().Last();
+            var villageMarker = Convert.ToString(village.Trim().ToCharArray().Last());
 
             //  Returns the village, if the village marker belongs to the village markers.
             return markers.Contains(villageMarker) ? village.Trim() : null;
@@ -213,7 +213,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
 
             var settings = Settings.Instance;
             var markers = settings.GetLocationMarkers("island");
-            var islandMarker = island.Trim().ToCharArray().Last();
+            var islandMarker = Convert.ToString(island.Trim().ToCharArray().Last());
 
             //  Returns the island, if the island marker belongs to the island markers.
             return markers.Contains(islandMarker) ? island.Trim() : null;
@@ -242,12 +242,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services.Helpers
 
             var settings = Settings.Instance;
             var markers = settings.GetLocationMarkers("street");
-            var streetMarker = street.Trim().ToCharArray().Last();
+            var streetMarker = Convert.ToString(street.Trim().ToCharArray().Last());
 
             //  Returns the street name, if the street name marker belongs to the street names marker.
             return markers.Contains(streetMarker)
                        ? street.Trim()
-                       : (streetMarker == '0' ? GetStreetCorrected(streetEng.Trim()) : null);
+                       : (streetMarker == "0" ? GetStreetCorrected(streetEng.Trim()) : null);
         }
 
         /// <summary>

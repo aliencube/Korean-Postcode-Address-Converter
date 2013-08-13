@@ -79,42 +79,42 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         /// <summary>
         /// Gets the list of Province markers.
         /// </summary>
-        char[] ProvinceMarkers { get; }
+        IList<string> ProvinceMarkers { get; }
 
         /// <summary>
         /// Gets the list of County markers.
         /// </summary>
-        char[] CountyMarkers { get; }
+        IList<string> CountyMarkers { get; }
 
         /// <summary>
         /// Gets the list of District markers.
         /// </summary>
-        char[] DistrictMarkers { get; }
+        IList<string> DistrictMarkers { get; }
 
         /// <summary>
         /// Gets the list of Suburb markers.
         /// </summary>
-        char[] SuburbMarkers { get; }
+        IList<string> SuburbMarkers { get; }
 
         /// <summary>
         /// Gets the list of Village markers.
         /// </summary>
-        char[] VillageMarkers { get; }
+        IList<string> VillageMarkers { get; }
 
         /// <summary>
         /// Gets the list of Island markers.
         /// </summary>
-        char[] IslandMarkers { get; }
+        IList<string> IslandMarkers { get; }
 
         /// <summary>
         /// Gets the list of San (ie. former forrest area) markers.
         /// </summary>
-        char[] SanMarkers { get; }
+        IList<string> SanMarkers { get; }
 
         /// <summary>
         /// Gets the list of Street markers.
         /// </summary>
-        char[] StreetMarkers { get; }
+        IList<string> StreetMarkers { get; }
 
         /// <summary>
         /// Gets the list of street name corrections.

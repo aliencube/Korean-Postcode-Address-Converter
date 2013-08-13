@@ -142,7 +142,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Gets the list of Province markers.
         /// </summary>
-        public char[] ProvinceMarkers
+        public IList<string> ProvinceMarkers
         {
             get { return this.Settings.GetLocationMarkers("province"); }
         }
@@ -150,7 +150,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Gets the list of County markers.
         /// </summary>
-        public char[] CountyMarkers
+        public IList<string> CountyMarkers
         {
             get { return this.Settings.GetLocationMarkers("county"); }
         }
@@ -158,7 +158,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Gets the list of District markers.
         /// </summary>
-        public char[] DistrictMarkers
+        public IList<string> DistrictMarkers
         {
             get { return this.Settings.GetLocationMarkers("district"); }
         }
@@ -166,7 +166,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Gets the list of Suburb markers.
         /// </summary>
-        public char[] SuburbMarkers
+        public IList<string> SuburbMarkers
         {
             get { return this.Settings.GetLocationMarkers("suburb"); }
         }
@@ -174,7 +174,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Gets the list of Village markers.
         /// </summary>
-        public char[] VillageMarkers
+        public IList<string> VillageMarkers
         {
             get { return this.Settings.GetLocationMarkers("village"); }
         }
@@ -182,7 +182,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Gets the list of Island markers.
         /// </summary>
-        public char[] IslandMarkers
+        public IList<string> IslandMarkers
         {
             get { return this.Settings.GetLocationMarkers("island"); }
         }
@@ -190,7 +190,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Gets the list of San (ie. former forrest area) markers.
         /// </summary>
-        public char[] SanMarkers
+        public IList<string> SanMarkers
         {
             get { return this.Settings.GetLocationMarkers("san"); }
         }
@@ -198,7 +198,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <summary>
         /// Gets the list of Street markers.
         /// </summary>
-        public char[] StreetMarkers
+        public IList<string> StreetMarkers
         {
             get { return this.Settings.GetLocationMarkers("street"); }
         }
