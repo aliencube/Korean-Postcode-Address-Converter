@@ -126,7 +126,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// </summary>
         /// <param name="key">Property key.</param>
         /// <returns>Returns the list of location markers.</returns>
-        public char[] GetLocationMarkers(string key)
+        public IList<string> GetLocationMarkers(string key)
         {
             var instance = this.ConversionSettings.LocationMarkers;
             var pi = instance.GetType()
@@ -136,7 +136,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             if (String.IsNullOrWhiteSpace(value))
                 return null;
 
-            var result = value.ToCharArray();
+            var result = value.Contains(",")
+                             ? value.Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries).ToList()
+                             : value.ToCharArray().Select(p => Convert.ToString(p)).ToList();
             return result;
         }
 
