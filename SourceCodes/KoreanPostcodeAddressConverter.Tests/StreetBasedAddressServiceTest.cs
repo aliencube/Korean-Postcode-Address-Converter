@@ -151,7 +151,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Tests
         public void _500_ArchiveXmlDocuments_SendFilenames_StoreZipFile()
         {
             var service = new StreetBasedAddressService(this._settings);
-            service.ArchiveXmlDocuments(this._zipfilename, this._extracts, this._extracts);
+            service.ArchiveXmlDocuments(true);
 
             Assert.IsTrue(Directory.GetFiles(this._extracts).Count(p => p.EndsWith(".zip")) == 1);
         }
