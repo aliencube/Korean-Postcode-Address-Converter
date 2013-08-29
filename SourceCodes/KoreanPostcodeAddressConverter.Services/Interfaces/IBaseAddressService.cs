@@ -192,17 +192,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services.Interfaces
         /// <summary>
         /// Archives XML documents generated.
         /// </summary>
-        /// <param name="filename">Filename for archive.</param>
-        /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
-        /// <param name="destinationDirectory">Destination directory where the archive file is stored.</param>
-        void ArchiveXmlDocuments(string filename, string sourceDirectory, string destinationDirectory = null);
+        /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
+        void ArchiveXmlDocuments(bool skipArchiving);
 
         /// <summary>
         /// Empty both downloads and extracts directory for cleanup.
         /// </summary>
-        /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
         /// <param name="skipEmptying">Value that specifies whether to skip emptying working directories or not.</param>
-        void EmptyDirectories(bool skipArchiving, bool skipEmptying);
+        void EmptyDirectories(bool skipEmptying);
 
         /// <summary>
         /// Loads objects to database.

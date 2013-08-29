@@ -424,79 +424,71 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="extractDirectory">Directory where extracted files are located.</param>
         /// <param name="archiveDirectory">Directory where archived files are located.</param>
         /// <returns>Returns <c>True</c>, if archived files exist; otherwise returns <c>False</c>.</returns>
-        protected virtual bool ExistArhives(string extractDirectory, string archiveDirectory)
+        protected virtual bool ExistArchives(string extractDirectory, string archiveDirectory)
+        {
+            var path = this.GetArchivedDirectoryWithTimestamp(extractDirectory, archiveDirectory);
+            return Directory.Exists(path) && Directory.GetFiles(path).Any();
+        }
+
+        /// <summary>
+        /// Gets the archived directory with timestamp.
+        /// </summary>
+        /// <param name="extractDirectory">Directory where extracted files are located.</param>
+        /// <param name="archiveDirectory">Directory where archived files are located.</param>
+        /// <returns>Returns the archived directory with timestamp.</returns>
+        protected virtual string GetArchivedDirectoryWithTimestamp(string extractDirectory, string archiveDirectory)
         {
             var timestamp = ConversionHelper.GetTimestampFromFilename(Directory.GetFiles(extractDirectory)
                                                                                .Select(p => ConversionHelper.GetFilenameFromFilepath(p, this.Settings))
                                                                                .First(),
                                                                       this.Settings);
-            return Directory.Exists(String.Format("{0}\\{1}", archiveDirectory, timestamp));
+            var path = String.Format("{0}\\{1}", archiveDirectory, timestamp);
+            return path;
         }
 
         /// <summary>
         /// Archives XML documents generated.
         /// </summary>
-        /// <param name="filename">Filename for archive.</param>
-        /// <param name="sourceDirectory">Source directory where files for archive are located.</param>
-        /// <param name="destinationDirectory">Destination directory where the archive file is stored.</param>
-        public virtual void ArchiveXmlDocuments(string filename, string sourceDirectory, string destinationDirectory = null)
+        /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
+        public virtual void ArchiveXmlDocuments(bool skipArchiving)
         {
-            if (String.IsNullOrWhiteSpace(destinationDirectory))
-                destinationDirectory = sourceDirectory;
-
-            this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Archiving to {0}", destinationDirectory)));
-
-            using (var zip = new ZipFile(String.Format("{0}\\{1}", destinationDirectory, filename), Encoding.UTF8))
+            if (skipArchiving)
             {
-                foreach (var filepath in Directory.GetFiles(sourceDirectory).Where(p => p.EndsWith(".xml")))
+                this.OnStatusChanged(new StatusChangedEventArgs("Archiving skipped"));
+                return;
+            }
+
+            this.OnStatusChanged(new StatusChangedEventArgs("Archiving files"));
+
+            var archivedirectory = this.GetArchivedDirectoryWithTimestamp(this.ExtractDirectory, this.ArchiveDirectory);
+            if (!Directory.Exists(archivedirectory))
+                Directory.CreateDirectory(archivedirectory);
+
+            using (var zip = new ZipFile(String.Format("{0}\\{1}", archivedirectory, this.FilenameForArchive), Encoding.UTF8))
+            {
+                foreach (var filepath in Directory.GetFiles(this.ExtractDirectory).Where(p => p.EndsWith(".xml")))
                     zip.AddFile(filepath, String.Empty);
                 zip.Save();
             }
 
-            this.OnStatusChanged(new StatusChangedEventArgs(String.Format("Archived to {0}", destinationDirectory)));
+            this.OnStatusChanged(new StatusChangedEventArgs("Archived files"));
         }
 
         /// <summary>
         /// Empty both downloads and extracts directory for cleanup.
         /// </summary>
-        /// <param name="skipArchiving">Value that specifies whether to skip archiving files or not.</param>
         /// <param name="skipEmptying">Value that specifies whether to skip emptying working directories or not.</param>
-        public virtual void EmptyDirectories(bool skipArchiving, bool skipEmptying)
+        public virtual void EmptyDirectories(bool skipEmptying)
         {
             this.OnStatusChanged(new StatusChangedEventArgs("Emptying directories"));
 
             //  Deletes files in download directory.
-            if (!skipEmptying)
-                foreach (var filepath in Directory.GetFiles(this.DownloadDirectory))
-                    File.Delete(filepath);
+            foreach (var filepath in Directory.GetFiles(this.DownloadDirectory))
+                File.Delete(filepath);
 
             //  Deletes files in extract directory.
-            var timestamp = ConversionHelper.GetTimestampFromFilename(Directory.GetFiles(this.ExtractDirectory)
-                                                                               .Select(p => ConversionHelper.GetFilenameFromFilepath(p, this.Settings))
-                                                                               .First(),
-                                                                      this.Settings);
-            var archivedirectory = String.Format("{0}\\{1}", this.ArchiveDirectory, timestamp);
-            if (!Directory.Exists(archivedirectory))
-                Directory.CreateDirectory(archivedirectory);
-
             foreach (var filepath in Directory.GetFiles(this.ExtractDirectory))
-            {
-                if (skipArchiving && filepath.EndsWith(".xml"))
-                {
-                    var archivename = ConversionHelper.GetFilenameFromFilepath(filepath, this.Settings);
-
-                    //  Deletes existing files first before copying or moving.
-                    if (File.Exists(String.Format("{0}\\{1}", archivedirectory, archivename)))
-                        File.Delete(String.Format("{0}\\{1}", archivedirectory, archivename));
-
-                    if (skipEmptying)
-                        File.Copy(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
-                    else
-                        File.Move(filepath, String.Format("{0}\\{1}", archivedirectory, archivename));
-                }
-                else if (!skipEmptying)
-                    File.Delete(filepath);
-            }
+                File.Delete(filepath);
 
             this.OnStatusChanged(new StatusChangedEventArgs("Emptied directories"));
         }
@@ -520,26 +512,14 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
             this.DownloadFiles(skipDownloading);
             this.ExtractFiles(skipExtracting);
 
-            if (this.ExistArhives(this.ExtractDirectory, this.ArchiveDirectory))
+            if (this.ExistArchives(this.ExtractDirectory, this.ArchiveDirectory))
                 return;
 
             this.ConvertEncodings(skipConverting);
             this.GenerateXmlDocuments(skipGenerating);
+            this.ArchiveXmlDocuments(skipArchiving);
 
-            if (!skipArchiving)
-            {
-                var timestamp = ConversionHelper.GetTimestampFromFilename(Directory.GetFiles(this.ExtractDirectory)
-                                                                                   .Select(p => ConversionHelper.GetFilenameFromFilepath(p, this.Settings))
-                                                                                   .First(),
-                                                                          this.Settings);
-                var archivedirectory = String.Format("{0}\\{1}", this.ArchiveDirectory, timestamp);
-                if (!Directory.Exists(archivedirectory))
-                    Directory.CreateDirectory(archivedirectory);
-
-                this.ArchiveXmlDocuments(this.FilenameForArchive, this.ExtractDirectory, archivedirectory);
-            }
-
-            this.EmptyDirectories(skipArchiving, skipEmptying);
+            this.EmptyDirectories(skipEmptying);
         }
         #endregion
 
