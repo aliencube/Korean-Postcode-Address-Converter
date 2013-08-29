@@ -480,6 +480,12 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
         /// <param name="skipEmptying">Value that specifies whether to skip emptying working directories or not.</param>
         public virtual void EmptyDirectories(bool skipEmptying)
         {
+            if (skipEmptying)
+            {
+                this.OnStatusChanged(new StatusChangedEventArgs("Emptying skipped"));
+                return;
+            }
+
             this.OnStatusChanged(new StatusChangedEventArgs("Emptying directories"));
 
             //  Deletes files in download directory.
@@ -517,8 +523,8 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Services
 
             this.ConvertEncodings(skipConverting);
             this.GenerateXmlDocuments(skipGenerating);
-            this.ArchiveXmlDocuments(skipArchiving);
 
+            this.ArchiveXmlDocuments(skipArchiving);
             this.EmptyDirectories(skipEmptying);
         }
         #endregion
