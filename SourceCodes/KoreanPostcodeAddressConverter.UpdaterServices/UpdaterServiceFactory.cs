@@ -132,10 +132,9 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
                                     service.SkipArchivingXmlDocuments,
                                     true);
 
-            if (service.SkipLoadingDatabase)
-                return;
+            if (!service.SkipLoadingDatabase)
+                this.LoadDatabase(service.ExtractDirectory, serviceType);
 
-            this.LoadDatabase(service.ExtractDirectory, serviceType);
             service.EmptyDirectories(service.SkipEmptyingDirectories);
         }
 
