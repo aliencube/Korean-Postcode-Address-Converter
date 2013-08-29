@@ -130,21 +130,13 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
                                     service.SkipConvertingFiles,
                                     service.SkipGeneratingXmlDocuments,
                                     service.SkipArchivingXmlDocuments,
-                                    service.SkipLoadingDatabase ? service.SkipEmptyingDirectories : true);
+                                    true);
 
             if (service.SkipLoadingDatabase)
                 return;
 
-            switch (serviceType)
-            {
-                case ConverterServiceType.Lot:
-                    this.LoadDatabase(service.ArchiveDirectory, serviceType);
-                    break;
-                case ConverterServiceType.Street:
-                    this.LoadDatabase(service.ExtractDirectory, serviceType);
-                    break;
-            }
-            service.EmptyDirectories(service.SkipArchivingXmlDocuments, false);
+            this.LoadDatabase(service.ExtractDirectory, serviceType);
+            service.EmptyDirectories(service.SkipEmptyingDirectories);
         }
 
         /// <summary>
@@ -174,10 +166,7 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressUpdater.Services
             switch (serviceType)
             {
                 case ConverterServiceType.Lot:
-                    var archiveDirectory = Directory.GetDirectories(sourceDirectory)
-                                                    .OrderBy(p => p)
-                                                    .Last();
-                    filepaths = Directory.GetFiles(archiveDirectory).Where(p => p.EndsWith(".xml")).ToList();
+                    filepaths = Directory.GetFiles(sourceDirectory).Where(p => p.EndsWith(".xml")).ToList();
                     this.LoadLotBasedAddresses(filepaths);
                     break;
                 case ConverterServiceType.Street:
