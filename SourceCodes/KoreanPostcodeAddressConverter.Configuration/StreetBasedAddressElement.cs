@@ -29,6 +29,17 @@ namespace Aliencube.Utilities.KoreanPostcodeAddressConverter.Configuration
         }
 
         /// <summary>
+        /// Gets or sets the list of filenames.
+        /// </summary>
+        [ConfigurationProperty("filenameMappings", IsRequired = true)]
+        [ConfigurationCollection(typeof(KeyValuePairElementCollection), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
+        public KeyValuePairElementCollection FilenameMappings
+        {
+            get { return (KeyValuePairElementCollection)this["filenameMappings"]; }
+            set { this["filenameMappings"] = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the download directory.
         /// </summary>
         [ConfigurationProperty("downloadDirectory", IsRequired = true)]
